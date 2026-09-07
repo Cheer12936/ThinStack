@@ -4,17 +4,17 @@ import re
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "skills" / "slice-to-green"
+SKILL = ROOT / "skills" / "thinslack-code"
 
 def validate(root=ROOT):
     root = Path(root)
-    skill = root / "skills" / "slice-to-green"
+    skill = root / "skills" / "thinslack-code"
     errors = []
     text = (skill / "SKILL.md").read_text(encoding="utf-8")
     if not text.startswith("---\n"):
         errors.append("Missing YAML frontmatter")
     header = text.split("---", 2)[1]
-    for key in ("name: slice-to-green", "license: MIT", 'version: "0.1.0-alpha.1"'):
+    for key in ("name: thinslack-code", "license: MIT", 'version: "0.1.0-alpha.2"'):
         if key not in header: errors.append("Missing metadata: " + key)
     if len(text.splitlines()) > 150: errors.append("Control plane exceeds 150 lines")
     main_links = set(re.findall(r"\]\((references/[^)#]+)", text))

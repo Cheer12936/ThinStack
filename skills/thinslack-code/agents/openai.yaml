@@ -1,5 +1,5 @@
 interface:
-  display_name: Slice to Green
+  display_name: "Thinslack-Code"
   short_description: "Adaptive design depth, risk gates and verified outcomes"
   icon_small: assets/icon.svg
   icon_large: assets/icon.svg

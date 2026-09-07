@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.0-alpha.2 — 2026-09-08
+
+- Rename the displayed skill to Thinslack-Code and its folder/invocation to thinslack-code.
+- Update installation tooling, validation and usage examples. Repository name remains ThinStack.
+- No workflow, permission or verification-floor changes. Archive the previous slice-to-green installation after installing the new name; historical reports and copyright notices remain unchanged.
+
+
 ## 0.1.0-alpha.1 — 2026-09-08
 
 - Single self-contained skill; removed separate design/test entrypoints from the distribution.

@@ -15,7 +15,7 @@ class ManagementTests(unittest.TestCase):
         self.root = Path(self.tmp.name) / "skills"
         self.source = Path(self.tmp.name) / "source"
         self.source.mkdir()
-        (self.source / "SKILL.md").write_text("---\nname: slice-to-green\n---\n", encoding="utf-8")
+        (self.source / "SKILL.md").write_text("---\nname: thinslack-code\n---\n", encoding="utf-8")
         (self.source / "content.txt").write_text("v1", encoding="utf-8")
 
     def test_install_refuses_overwrite_and_preserves_unrelated(self):
@@ -46,7 +46,7 @@ class ManagementTests(unittest.TestCase):
 
     def test_update_rejects_unrelated_target(self):
         self.root.mkdir()
-        target = self.root / "slice-to-green"
+        target = self.root / "thinslack-code"
         target.mkdir()
         (target / "SKILL.md").write_text("---\nname: unrelated\n---\n")
         with self.assertRaises(ValueError):

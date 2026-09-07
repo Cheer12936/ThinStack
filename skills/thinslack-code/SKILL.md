@@ -1,12 +1,12 @@
 ---
-name: slice-to-green
+name: thinslack-code
 license: MIT
 metadata:
-  version: "0.1.0-alpha.1"
+  version: "0.1.0-alpha.2"
 description: Design, implement or verify software changes through one adaptive harness. Use for feature specifications, project architecture, bug fixes, implementation or testing; preserve the requested scope while applying independent design and verification depths and evidence-based completion.
 ---
 
-# Slice to Green
+# Thinslack-Code
 
 ## Core principle
 Own outcomes, risk, quality gates and evidence; the model owns implementation strategy. Preserve existing project conventions and authorization. A clear implementation request authorizes routine in-scope work; analysis-only requests remain read-only. No repeated approval ceremony. Read [authorization boundaries](references/preflight-and-gates.md) only when a consequential decision or scope boundary arises.
