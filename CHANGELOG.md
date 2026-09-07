@@ -1,0 +1,12 @@
+# Changelog
+
+## 0.1.0-alpha.1 — 2026-09-08
+
+- Single self-contained skill; removed separate design/test entrypoints from the distribution.
+- Project initialization and slice delivery distinguished from design-only/verification-only/implementation scope.
+- Independent design and verification depths, risk override floors and evidence-based GREEN.
+- Clarified that high failure cost raises verification without automatically requiring full architecture design.
+- Scope-appropriate reports for design/review; no fabricated delivery verdict.
+- Explicit-target installer with backups; portable structural checks; isolated runnable evaluations.
+
+This alpha changes invocation names and removes legacy compatibility entrypoints. Existing project documentation is preserved. Downgrade rules, risk floors and authorization boundaries must be called out in later changes.

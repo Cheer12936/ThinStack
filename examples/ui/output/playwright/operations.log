@@ -1,0 +1,189 @@
+### Browser `alpha-ui` opened with pid 41332.
+### Ran Playwright code
+```js
+await page.goto('http://127.0.0.1:18764');
+```
+### Page
+- Page URL: http://127.0.0.1:18764/
+- Page Title: Appointment demo
+- Console: 1 errors, 0 warnings
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-09-07T16-22-53-002Z.yml)
+### Events
+- New console entries: .playwright-cli\console-2026-09-07T16-22-52-484Z.log#L1
+### Ran Playwright code
+```js
+await page.setViewportSize({ width: 1440, height: 900 });
+```
+### Page
+- Page URL: http://127.0.0.1:18764/
+- Page Title: Appointment demo
+- Console: 1 errors, 0 warnings
+### Snapshot
+```yaml
+- generic [active] [ref=e1]:
+  - heading "Appointments" [level=1] [ref=e2]
+  - button "Book appointment" [ref=e3]
+  - status
+```
+### Result
+{
+  "viewport": [
+    1440,
+    900
+  ],
+  "padding": [
+    "8px",
+    "16px",
+    "8px",
+    "16px"
+  ],
+  "rect": {
+    "x": 32,
+    "y": 115.875,
+    "width": 139.46875,
+    "height": 31
+  },
+  "noHorizontalOverflow": true,
+  "status": ""
+}
+### Ran Playwright code
+```js
+await page.getByRole('button', { name: 'Book appointment' }).evaluate('el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect(); const result = {viewport: [innerWidth, innerHeight], padding: [s.paddingTop,s.paddingRight,s.paddingBottom,s.paddingLeft], rect: {x:r.x,y:r.y,width:r.width,height:r.height}, noHorizontalOverflow: document.documentElement.scrollWidth <= innerWidth, status:document.querySelector("#result").textContent}; if(s.paddingLeft !== "16px" || s.paddingRight !== "16px" || s.paddingTop !== "8px" || s.paddingBottom !== "8px" || !result.noHorizontalOverflow || result.status !== "") throw Error(JSON.stringify(result)); return result; }');
+```
+### Result
+- [Screenshot of viewport](output\playwright\desktop.png)
+### Ran Playwright code
+```js
+// Screenshot viewport and save it as output\playwright\desktop.png
+await page.screenshot({
+  path: 'output\\playwright\\desktop.png',
+  scale: 'css',
+  type: 'png'
+});
+```
+### Ran Playwright code
+```js
+await page.getByRole('button', { name: 'Book appointment' }).click();
+```
+### Page
+- Page URL: http://127.0.0.1:18764/
+- Page Title: Appointment demo
+- Console: 1 errors, 0 warnings
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-09-07T16-23-23-799Z.yml)
+### Result
+{
+  "clickResult": "Selected",
+  "pass": true
+}
+### Ran Playwright code
+```js
+await page.evaluate('() => { const text = document.querySelector("#result").textContent; if (text !== "Selected") throw Error(text); return {clickResult:text,pass:true}; }');
+```
+### Result
+- [Screenshot of viewport](output\playwright\desktop-selected.png)
+### Ran Playwright code
+```js
+// Screenshot viewport and save it as output\playwright\desktop-selected.png
+await page.screenshot({
+  path: 'output\\playwright\\desktop-selected.png',
+  scale: 'css',
+  type: 'png'
+});
+```
+### Ran Playwright code
+```js
+await page.setViewportSize({ width: 390, height: 844 });
+```
+### Ran Playwright code
+```js
+await page.reload();
+```
+### Page
+- Page URL: http://127.0.0.1:18764/
+- Page Title: Appointment demo
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-09-07T16-23-36-370Z.yml)
+### Page
+- Page URL: http://127.0.0.1:18764/
+- Page Title: Appointment demo
+### Snapshot
+```yaml
+- generic [active] [ref=f1e1]:
+  - heading "Appointments" [level=1] [ref=f1e2]
+  - button "Book appointment" [ref=f1e3]
+  - status
+```
+### Result
+Total messages: 0 (Errors: 0, Warnings: 0)
+
+### Result
+{
+  "viewport": [
+    390,
+    844
+  ],
+  "padding": [
+    "8px",
+    "16px",
+    "8px",
+    "16px"
+  ],
+  "rect": {
+    "x": 32,
+    "y": 115.875,
+    "width": 139.46875,
+    "height": 31
+  },
+  "noHorizontalOverflow": true,
+  "status": ""
+}
+### Ran Playwright code
+```js
+await page.getByRole('button', { name: 'Book appointment' }).evaluate('el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect(); const result = {viewport: [innerWidth, innerHeight], padding: [s.paddingTop,s.paddingRight,s.paddingBottom,s.paddingLeft], rect: {x:r.x,y:r.y,width:r.width,height:r.height}, noHorizontalOverflow: document.documentElement.scrollWidth <= innerWidth, status:document.querySelector("#result").textContent}; if(s.paddingLeft !== "16px" || s.paddingRight !== "16px" || s.paddingTop !== "8px" || s.paddingBottom !== "8px" || !result.noHorizontalOverflow || result.status !== "") throw Error(JSON.stringify(result)); return result; }');
+```
+### Result
+- [Screenshot of viewport](output\playwright\mobile.png)
+### Ran Playwright code
+```js
+// Screenshot viewport and save it as output\playwright\mobile.png
+await page.screenshot({
+  path: 'output\\playwright\\mobile.png',
+  scale: 'css',
+  type: 'png'
+});
+```
+### Ran Playwright code
+```js
+await page.getByRole('button', { name: 'Book appointment' }).click();
+```
+### Page
+- Page URL: http://127.0.0.1:18764/
+- Page Title: Appointment demo
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-09-07T16-23-57-624Z.yml)
+### Result
+{
+  "clickResult": "Selected",
+  "pass": true
+}
+### Ran Playwright code
+```js
+await page.evaluate('() => { const text = document.querySelector("#result").textContent; if (text !== "Selected") throw Error(text); return {clickResult:text,pass:true}; }');
+```
+### Result
+- [Screenshot of viewport](output\playwright\mobile-selected.png)
+### Ran Playwright code
+```js
+// Screenshot viewport and save it as output\playwright\mobile-selected.png
+await page.screenshot({
+  path: 'output\\playwright\\mobile-selected.png',
+  scale: 'css',
+  type: 'png'
+});
+```
+Browser 'alpha-ui' closed
+
+2026-09-08T00:26:08.9092720+08:00 Server shutdown verified: no listener on 127.0.0.1:18764. Own browser alpha-ui closed.
+Tested index.html SHA256: 9D099261015CC1E1D91D6B2678A4D45DB74D5E3EED7415E225EF3567788AA999

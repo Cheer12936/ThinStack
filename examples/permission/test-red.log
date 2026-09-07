@@ -1,0 +1,85 @@
+Time: 2026-09-08T00:21:52.3669773+08:00
+Command: python -B -m unittest discover -v
+Phase: before predicate repair
+test_allowed (test_access.Tests.test_allowed) ... ok
+test_anonymous (test_access.Tests.test_anonymous) ... ok
+test_anonymous_denied_for_each_tenant (test_access_regression.PermissionRegressionTests.test_anonymous_denied_for_each_tenant) ... ok
+test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) ...
+  test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='a', actor_tenant='a', role='writer') ... FAIL
+  test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='a', actor_tenant='a', role='admin') ... FAIL
+  test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='a', actor_tenant='a', role='') ... FAIL
+  test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='a', actor_tenant='b', role='reader') ... FAIL
+  test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='b', actor_tenant='a', role='reader') ... FAIL
+  test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='b', actor_tenant='b', role='writer') ... FAIL
+  test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='b', actor_tenant='b', role='admin') ... FAIL
+  test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='b', actor_tenant='b', role='') ... FAIL
+
+======================================================================
+FAIL: test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='a', actor_tenant='a', role='writer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\permission\test_access_regression.py", line 13, in test_policy_truth_table_and_tenant_substitution
+    self.assertIs(can_read(
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='a', actor_tenant='a', role='admin')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\permission\test_access_regression.py", line 13, in test_policy_truth_table_and_tenant_substitution
+    self.assertIs(can_read(
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='a', actor_tenant='a', role='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\permission\test_access_regression.py", line 13, in test_policy_truth_table_and_tenant_substitution
+    self.assertIs(can_read(
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='a', actor_tenant='b', role='reader')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\permission\test_access_regression.py", line 13, in test_policy_truth_table_and_tenant_substitution
+    self.assertIs(can_read(
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='b', actor_tenant='a', role='reader')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\permission\test_access_regression.py", line 13, in test_policy_truth_table_and_tenant_substitution
+    self.assertIs(can_read(
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='b', actor_tenant='b', role='writer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\permission\test_access_regression.py", line 13, in test_policy_truth_table_and_tenant_substitution
+    self.assertIs(can_read(
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='b', actor_tenant='b', role='admin')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\permission\test_access_regression.py", line 13, in test_policy_truth_table_and_tenant_substitution
+    self.assertIs(can_read(
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) (record_tenant='b', actor_tenant='b', role='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\permission\test_access_regression.py", line 13, in test_policy_truth_table_and_tenant_substitution
+    self.assertIs(can_read(
+AssertionError: True is not False
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+FAILED (failures=8)
+Exit: 1

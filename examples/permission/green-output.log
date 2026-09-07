@@ -1,0 +1,9 @@
+test_allowed (test_access.Tests.test_allowed) ... ok
+test_anonymous (test_access.Tests.test_anonymous) ... ok
+test_anonymous_denied_for_each_tenant (test_access_regression.PermissionRegressionTests.test_anonymous_denied_for_each_tenant) ... ok
+test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK

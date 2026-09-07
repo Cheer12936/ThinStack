@@ -1,0 +1,26 @@
+Time: 2026-09-08T00:22:07.4204410+08:00
+Command: python -B -m unittest discover -v
+Phase: after predicate repair
+test_allowed (test_access.Tests.test_allowed) ... ok
+test_anonymous (test_access.Tests.test_anonymous) ... ok
+test_anonymous_denied_for_each_tenant (test_access_regression.PermissionRegressionTests.test_anonymous_denied_for_each_tenant) ... ok
+test_policy_truth_table_and_tenant_substitution (test_access_regression.PermissionRegressionTests.test_policy_truth_table_and_tenant_substitution) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
+Exit: 0
+Python 3.12.5
+
+Algorithm : SHA256
+Hash      : 119755937C2B167A7AEF3805859CD5687A97155B7DE61E5C37B1B99E409D5AF6
+Path      : ..\permission\access.py
+
+Algorithm : SHA256
+Hash      : 6E3D0B06D8AEAFFBB13E7DC109F2E66B0F4CC94972AA46F92FBD264E6EBB36AE
+Path      : ..\permission\test_access.py
+
+Algorithm : SHA256
+Hash      : 8BF6A532E9A55A6D51AD3E14C150889BFD46A0725771A5362782FF675D022B01
+Path      : ..\permission\test_access_regression.py

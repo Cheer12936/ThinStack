@@ -1,0 +1,233 @@
+test_empty (test_app.Tests.test_empty) ... ERROR
+test_blank_strings_rejected_without_changing_rows (test_create.CreateTests.test_blank_strings_rejected_without_changing_rows) ... ERROR
+test_blank_strings_rejected_without_changing_rows (test_create.CreateTests.test_blank_strings_rejected_without_changing_rows) ... ERROR
+test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) ...
+  test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='None') ... ERROR
+  test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='0') ... ERROR
+  test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='1') ... ERROR
+  test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='False') ... ERROR
+  test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='1.2') ... ERROR
+  test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value="b'text'") ... ERROR
+  test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='[]') ... ERROR
+  test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='{}') ... ERROR
+  test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='<object object at 0x00000277DB748950>') ... ERROR
+test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) ... ERROR
+test_preserves_text_returns_id_and_commits_for_new_instance (test_create.CreateTests.test_preserves_text_returns_id_and_commits_for_new_instance) ... ERROR
+test_preserves_text_returns_id_and_commits_for_new_instance (test_create.CreateTests.test_preserves_text_returns_id_and_commits_for_new_instance) ... ERROR
+
+======================================================================
+ERROR: test_empty (test_app.Tests.test_empty)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\shutil.py", line 633, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: '<USER_HOME>\\.codex\\skill-evals\\single-skill-alpha\\business\\.tmp\\tmpx7kn7k4w\\notes.db'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "..\business\test_app.py", line 7, in test_empty
+    with tempfile.TemporaryDirectory() as d:
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 946, in __exit__
+    self.cleanup()
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 950, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 930, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+  File "C:\Program Files\Python312\Lib\shutil.py", line 781, in rmtree
+    return _rmtree_unsafe(path, onexc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.unlink, fullname, err)
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 905, in onexc
+    _os.unlink(path)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: '<USER_HOME>\\.codex\\skill-evals\\single-skill-alpha\\business\\.tmp\\tmpx7kn7k4w\\notes.db'
+
+======================================================================
+ERROR: test_blank_strings_rejected_without_changing_rows (test_create.CreateTests.test_blank_strings_rejected_without_changing_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 23, in test_blank_strings_rejected_without_changing_rows
+    saved_id = self.notes.create("existing")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_blank_strings_rejected_without_changing_rows (test_create.CreateTests.test_blank_strings_rejected_without_changing_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\shutil.py", line 633, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: '<USER_HOME>\\.codex\\skill-evals\\single-skill-alpha\\business\\tmpnnwuwx8z\\notes.db'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 950, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 930, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+  File "C:\Program Files\Python312\Lib\shutil.py", line 781, in rmtree
+    return _rmtree_unsafe(path, onexc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.unlink, fullname, err)
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 905, in onexc
+    _os.unlink(path)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: '<USER_HOME>\\.codex\\skill-evals\\single-skill-alpha\\business\\tmpnnwuwx8z\\notes.db'
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='None')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 34, in test_non_strings_rejected_without_changing_rows
+    self.notes.create(value)
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 34, in test_non_strings_rejected_without_changing_rows
+    self.notes.create(value)
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 34, in test_non_strings_rejected_without_changing_rows
+    self.notes.create(value)
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='False')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 34, in test_non_strings_rejected_without_changing_rows
+    self.notes.create(value)
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='1.2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 34, in test_non_strings_rejected_without_changing_rows
+    self.notes.create(value)
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value="b'text'")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 34, in test_non_strings_rejected_without_changing_rows
+    self.notes.create(value)
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='[]')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 34, in test_non_strings_rejected_without_changing_rows
+    self.notes.create(value)
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='{}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 34, in test_non_strings_rejected_without_changing_rows
+    self.notes.create(value)
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows) (value='<object object at 0x00000277DB748950>')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 34, in test_non_strings_rejected_without_changing_rows
+    self.notes.create(value)
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_non_strings_rejected_without_changing_rows (test_create.CreateTests.test_non_strings_rejected_without_changing_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\shutil.py", line 633, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: '<USER_HOME>\\.codex\\skill-evals\\single-skill-alpha\\business\\tmp37zy5i85\\notes.db'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 950, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 930, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+  File "C:\Program Files\Python312\Lib\shutil.py", line 781, in rmtree
+    return _rmtree_unsafe(path, onexc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.unlink, fullname, err)
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 905, in onexc
+    _os.unlink(path)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: '<USER_HOME>\\.codex\\skill-evals\\single-skill-alpha\\business\\tmp37zy5i85\\notes.db'
+
+======================================================================
+ERROR: test_preserves_text_returns_id_and_commits_for_new_instance (test_create.CreateTests.test_preserves_text_returns_id_and_commits_for_new_instance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "..\business\test_create.py", line 17, in test_preserves_text_returns_id_and_commits_for_new_instance
+    ids = [self.notes.create(text) for text in texts]
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "..\business\app.py", line 10, in create
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_preserves_text_returns_id_and_commits_for_new_instance (test_create.CreateTests.test_preserves_text_returns_id_and_commits_for_new_instance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\shutil.py", line 633, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: '<USER_HOME>\\.codex\\skill-evals\\single-skill-alpha\\business\\tmpsts_9xth\\notes.db'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 950, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 930, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+  File "C:\Program Files\Python312\Lib\shutil.py", line 781, in rmtree
+    return _rmtree_unsafe(path, onexc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.unlink, fullname, err)
+  File "C:\Program Files\Python312\Lib\tempfile.py", line 905, in onexc
+    _os.unlink(path)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: '<USER_HOME>\\.codex\\skill-evals\\single-skill-alpha\\business\\tmpsts_9xth\\notes.db'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.196s
+
+FAILED (errors=15)
