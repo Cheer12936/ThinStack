@@ -4,7 +4,7 @@
 
 An adaptive skill for project initialization, design, implementation and verification. Independent design/verification depths; no mandatory test-layer ladder. English skill instructions, Chinese quickstart.
 
-版本：`0.1.0-alpha.4`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
+版本：`0.1.0-alpha.5`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
 
 ## 使用
 
@@ -49,6 +49,12 @@ install 遇到已有同名目录会拒绝覆盖；update 先把旧目录归档�
 - 已批准同一具体方案，或你明确要求跳过方案确认：不重复询问。
 - 确认前不开始脚手架、产品代码、可执行测试或迁移；只做只读调查和你要求的设计。
 - 权限、迁移等风险底线不变；新增范围或重要未决问题仍需单独解决。
+
+## 大需求如何拆片
+
+包含多个独立业务结果时，方案必须先展示切片清单：每片目标、验收目标、依赖和执行顺序。按业务结果拆，不按数据库/后端/前端拆；小需求不强拆，必须整体交付的改动说明原因。
+
+只详细设计当前切片。批准整份多切片方案后，可逐片实现、验证并连续推进，无需逐片重复确认。记录当前片及完成状态；全部请求的切片和相关跨片联动都被证明后，才能宣布整体 GREEN。
 
 ## 工作方式
 

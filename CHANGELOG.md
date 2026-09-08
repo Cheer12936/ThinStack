@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.5 — 2026-09-08
+
+- Require a visible business-outcome slice map for multi-outcome requests before plan approval.
+- Detail only the current slice; preserve small/atomic changes without artificial splitting.
+- Approval of a mapped multi-slice scope permits continuous in-scope execution without per-slice confirmation.
+- Track slice states and prerequisites; overall GREEN requires all requested slices and relevant integration evidence.
+
+
 ## 0.1.0-alpha.4 — 2026-09-08
 
 - Authorization behavior change: new projects and new business features show a concise concrete plan and wait for one confirmation before implementation.

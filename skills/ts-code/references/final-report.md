@@ -16,6 +16,8 @@ Evidence is current only if subsequent changes do not invalidate the behavior it
 
 ## Final response
 
+For multi-slice DELIVERY, distinguish the current slice verdict from the whole request: list verified/blocked/remaining slices compactly and include relevant cross-slice journey proof. Do not announce overall GREEN after only the first slice or from isolated passing slice tests that leave their integration unproven.
+
 Use a concise form, omitting empty categories except the remaining-work verdict:
 
 GREEN or NOT GREEN

@@ -6,7 +6,7 @@ Prepare the concrete proposal first: goal/acceptance, boundaries, intended appro
 
 Natural-language acceptance such as "ok", "do it" or "按这个做" approves the presented plan. A prior approval of the same concrete plan or explicit instruction to skip confirmation also suffices. Merely requesting a new feature does not approve a plan the user has not seen. Silence or elapsed time is never approval. Do not treat a changed conversation/session as loss of existing valid authorization. Analysis-only requests remain read-only.
 
-One approval covers routine implementation, tests, fixes, refactoring and in-scope depth escalation through completion. No repeated approval at backend/frontend/TDD/E2E transitions. If the initial approved plan explicitly includes initialization plus the first slice, both may run continuously; otherwise present the later new feature plan before starting it.
+One approval covers routine implementation, tests, fixes, refactoring and in-scope depth escalation through completion. For multiple outcomes, present the slice map before this confirmation. Approval of the entire mapped plan includes its slices and any explicit initialization work; do not ask again at slice or backend/frontend/TDD/E2E transitions. Approval limited to one slice does not authorize the others. A new feature outside the approved map needs its own proposal and confirmation.
 
 After plan approval (or for direct local fixes), stop only the dependent action for an unresolved consequential product decision, work outside authorized scope, an unapproved change to a global contract, or a risky data operation whose target/treatment has not been authorized.
 

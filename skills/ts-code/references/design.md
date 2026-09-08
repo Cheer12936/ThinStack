@@ -10,6 +10,10 @@ A missing architecture baseline does not block a local understood fix. Do not in
 
 ## Compact output
 
+For multiple independently verifiable outcomes, include a compact slice map in the existing plan/spec or project index: Slice ID | business goal | acceptance target | prerequisites | execution order. Check that all requested outcomes are covered; label explicitly deferred work rather than silently dropping it. Each slice should deliver an observable result across the necessary layers, not merely complete a database, controller or UI tier. Shared foundations may be prerequisite work, but their completion is not business delivery.
+
+Detail only the slice being implemented. Later slices retain lightweight targets and dependencies until needed. No fixed number of slices, size budget or extra roadmap file is required. A small coherent behavior is one slice. If safe consistency requires an atomic cross-cutting change, state the concrete coupling instead of forcing artificial intermediate deliveries. Within an approved multi-slice scope, refine internal details without repeated approval; changed business scope or consequential unresolved decisions still use the normal boundary rules.
+
 For new feature design, SPEC.md can contain goal/actor/entry, scope, observable acceptance, necessary design delta, assumptions and unresolved decisions. Existing ACCEPTANCE.md and DESIGN.md remain valid; do not create a competing combined copy. Split only substantial content. Use checkpoint-resume.md for persistence when needed.
 
 For a baseline, one ARCHITECTURAL_BASELINE.md can describe major modules/dependencies, core identity/ownership/relationships and expensive global decisions. Include only applicable tenancy, authorization, IDs, history, time/precision, transactions and API conventions. Add an ADR for consequential choices whose rationale must survive; do not design speculative future tables.

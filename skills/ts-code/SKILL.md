@@ -2,7 +2,7 @@
 name: ts-code
 license: MIT
 metadata:
-  version: "0.1.0-alpha.4"
+  version: "0.1.0-alpha.5"
 description: Design, implement or verify software changes through one adaptive harness. Use for feature specifications, project architecture, bug fixes, implementation or testing; preserve the requested scope while applying independent design and verification depths and evidence-based completion.
 ---
 
@@ -14,6 +14,8 @@ Own outcomes, risk, quality gates and evidence; the model owns implementation st
 Honor the requested mode: DESIGN_ONLY produces requested design artifacts without product code, migrations or executable tests; VERIFY_ONLY plans/reviews or creates/runs tests as requested without product fixes; DELIVERY implements and verifies within authorization. Depth never expands mode or permission. Existing approval of a concrete implementation/TDD plan remains valid. Design-only output reports readiness, and verification-only output reports tested scope; neither implies implemented delivery. In these modes the implementation loop is inactive and no new contract/scaffold is required merely to perform a review. Reuse adequate existing requirements; fill only consequential gaps.
 
 Choose the work type independently of mode: PROJECT_INIT establishes the minimum architecture and runnable foundation; SLICE delivers one observable business result against that foundation. For a new project or onboarding an existing one, read [project initialization](references/project-init.md). Existing projects are not reset or scaffolded again. For a slice, use relevant existing baseline constraints and describe only the delta. This skill is self-contained; no other skill is required.
+
+Before proposing a new project/feature plan, determine whether the request contains one or several independently verifiable business outcomes. Multiple outcomes MUST be decomposed into a visible slice map with each slice's goal, acceptance target, dependencies and execution order; cover the entire requested scope rather than hiding future outcomes in one large contract. Slice by usable business results, not database/backend/frontend layers or code volume. Keep small coherent requests as one slice; explain any consistency/atomicity reason an apparently large change must remain indivisible. Read [design](references/design.md) for decomposition details.
 
 ## Risk assessment
 Assess blast radius, failure cost, uncertainty, security, data, compatibility and external dependencies—not code volume. State Design Depth, Verification Depth, Change Profiles and a brief rationale before editing. Default each uncertain dimension to STANDARD; LIGHT needs a positive justification. Raise the affected dimension to FULL: consequential unresolved architecture affects design, while high failure cost affects verification. Overrides below set minimum floors.
@@ -49,6 +51,8 @@ Before any product-code change, record:
 Keep it brief; link adequate existing specs. For LIGHT/LIGHT, a visible message suffices. Otherwise use the existing feature documents, or SPEC.md for the contract and RUN.md for evidence; do not create competing copies. Read [checkpoint/resume](references/checkpoint-resume.md) when persisting or resuming work.
 
 For a new project/feature, the concise plan includes this contract, intended approach, material impact and any decision needed. Present it before requesting confirmation; do not create a separate approval document or treat silence as approval. While awaiting approval, do only read-only investigation and requested planning artifacts, not scaffolding, product code, executable tests or migrations. A pending plan is awaiting confirmation, not a failed GREEN check.
+
+For a multi-slice plan, detail only the current slice's design and Green Contract; later slices need acceptance targets and dependencies, not speculative full specs. Approval of the whole mapped scope authorizes continuous delivery slice by slice without repeated confirmation. Before advancing to a dependent slice, verify and checkpoint its prerequisites; independent authorized work may continue around a blocker. Each slice needs its own scoped proof, and overall GREEN requires every requested slice plus relevant cross-slice integration evidence.
 
 ## Autonomous loop
 Implement -> verify -> on failure diagnose/fix -> verify again, until the contract is proven. The model chooses tactics, sequence and test layers. Prefer test-first for bug regressions, complex business rules, deterministic domain logic and high-risk behavior; do not force RED for every task. Honor explicit TDD requests.
