@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.7 — 2026-09-08
+
+- Restore substantive spec-to-design-style baseline and slice proposal formats before plan approval.
+- Require concrete rules, acceptance, domain/schema/API/state deltas, UI flow, compatibility and traceable proof in the visible proposal.
+- Keep lightweight Green Contract as a summary, not a replacement for design.
+- Preserve one-time confirmation, current-slice-only detailed design, existing file layouts and concise local fixes.
+
+
 ## 0.1.0-alpha.6 — 2026-09-08
 
 - Make slice planning, meaningful progress transitions and per-slice final accounting consistently visible.

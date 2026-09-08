@@ -2,14 +2,14 @@
 name: ts-code
 license: MIT
 metadata:
-  version: "0.1.0-alpha.6"
+  version: "0.1.0-alpha.7"
 description: Design, implement or verify software changes through one adaptive harness. Use for feature specifications, project architecture, bug fixes, implementation or testing; preserve the requested scope while applying independent design and verification depths and evidence-based completion.
 ---
 
 # ts-code
 
 ## Core principle
-Own outcomes, risk, quality gates and evidence; the model owns implementation strategy. Local fixes under clear existing requirements may proceed directly. For new projects or new business features, first present a concise plan and wait for one confirmation before implementation; an ordinary "build/add/initialize" request alone does not approve an unseen plan. Reuse prior approval of the same concrete plan, or an explicit user instruction to skip plan confirmation. After approval, execute continuously within scope without repeated stage confirmations. Analysis-only requests remain read-only. Read [authorization boundaries](references/preflight-and-gates.md) for new project/feature planning or a consequential decision/scope boundary.
+Own outcomes, risk, quality gates and evidence; the model owns implementation strategy. Local fixes under clear existing requirements may proceed directly. For new projects or new business features, first present a substantive structured design proposal and wait for one confirmation before implementation; an ordinary "build/add/initialize" request alone does not approve an unseen plan. Reuse prior approval of the same concrete plan, or an explicit user instruction to skip plan confirmation. After approval, execute continuously within scope without repeated stage confirmations. Analysis-only requests remain read-only. Read [authorization boundaries](references/preflight-and-gates.md) for new project/feature planning or a consequential decision/scope boundary.
 
 Honor the requested mode: DESIGN_ONLY produces requested design artifacts without product code, migrations or executable tests; VERIFY_ONLY plans/reviews or creates/runs tests as requested without product fixes; DELIVERY implements and verifies within authorization. Depth never expands mode or permission. Existing approval of a concrete implementation/TDD plan remains valid. Design-only output reports readiness, and verification-only output reports tested scope; neither implies implemented delivery. In these modes the implementation loop is inactive and no new contract/scaffold is required merely to perform a review. Reuse adequate existing requirements; fill only consequential gaps.
 
@@ -39,8 +39,10 @@ Overrides below take precedence over initial judgment. Match profiles to changed
 | BACKGROUND_JOB, FILE_UPLOAD, CACHE, SEARCH | Applicable lifecycle and consistency risks | [runtime](references/runtime.md) |
 
 ## Design depth
-LIGHT: existing behavior/contracts suffice. STANDARD: concise acceptance and necessary design delta. FULL: consequential architecture, identity or core-model decisions and impact analysis.
+LIGHT: existing behavior/contracts suffice. STANDARD: explicit acceptance and necessary design delta. FULL: consequential architecture, identity or core-model decisions and impact analysis.
 Read [design](references/design.md) only when such decisions need elaboration or design work is requested. Full design does not require a fixed document count.
+
+For new-project proposals, MUST read and use the [baseline proposal format](references/baseline-proposal.md). For new feature/current-slice proposals, MUST read and use the [slice proposal format](references/slice-proposal.md), including when design depth is LIGHT. Restore the former spec-to-design level of substance: concrete rules, observable acceptance and actual domain/data/API/state decisions, not just a task list. Show the structured proposal in the conversation before approval; a file link, slice map or Green Contract alone is not a substitute. Reuse established decisions and mark irrelevant sections explicitly; do not invent detail to fill a template. Local tiny fixes remain concise unless a full proposal is requested.
 
 ## Verification depth
 LIGHT: focused observable proof for a local low-risk change. STANDARD: acceptance plus affected integration/regression. FULL: risk-specific failure, boundary, compatibility and affected-consumer proof.
@@ -53,9 +55,9 @@ Before any product-code change, record:
 - **Constraints:** invariants and boundaries to preserve.
 - **Required Proof:** checks/evidence mapped to those behaviors and constraints, with a short sufficiency rationale.
 
-Keep it brief; link adequate existing specs. For LIGHT/LIGHT, a visible message suffices. Otherwise use the existing feature documents, or SPEC.md for the contract and RUN.md for evidence; do not create competing copies. Read [checkpoint/resume](references/checkpoint-resume.md) when persisting or resuming work.
+The contract remains a short verification summary within the full proposal, not a limit on proposal detail. Link adequate existing specs. For local LIGHT/LIGHT fixes, a visible message suffices. Otherwise use the existing feature documents, or SPEC.md for the contract/design and RUN.md for evidence; restore design substance without requiring separate SPEC/ACCEPTANCE/DESIGN files. Read [checkpoint/resume](references/checkpoint-resume.md) when persisting or resuming work.
 
-For a new project/feature, the concise plan includes this contract, intended approach, material impact and any decision needed. Present it before requesting confirmation; do not create a separate approval document or treat silence as approval. While awaiting approval, do only read-only investigation and requested planning artifacts, not scaffolding, product code, executable tests or migrations. A pending plan is awaiting confirmation, not a failed GREEN check.
+For a new project/feature, the structured proposal includes this contract and the applicable design sections, rationale, material impact and decisions needed. Present it before requesting confirmation; do not create a separate approval document or treat silence as approval. While awaiting approval, do only read-only investigation and requested planning artifacts, not scaffolding, product code, executable tests or migrations. A pending plan is awaiting confirmation, not a failed GREEN check.
 
 For a multi-slice plan, detail only the current slice's design and Green Contract; later slices need acceptance targets and dependencies, not speculative full specs. Approval of the whole mapped scope authorizes continuous delivery slice by slice without repeated confirmation. Before advancing to a dependent slice, verify and checkpoint its prerequisites; independent authorized work may continue around a blocker. Each slice needs its own scoped proof, and overall GREEN requires every requested slice plus relevant cross-slice integration evidence.
 

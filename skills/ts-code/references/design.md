@@ -8,7 +8,9 @@ Use the project's current canonical decisions and explicit user corrections. Cur
 
 A missing architecture baseline does not block a local understood fix. Do not invent approved global rules. For new architecture establish the durable skeleton before dependent implementation; for an existing system describe the delta only.
 
-## Compact output
+## Structured proposal output
+
+Use baseline-proposal.md for new-project design and slice-proposal.md for the current new feature/slice, as linked directly from SKILL.md. Follow their section coverage with concrete decisions and reasons. A short goal/steps/proof list is not a complete proposal. Show the proposal to the user rather than only linking a document; keep Green Contract as its concise verification summary. This restores the former spec-to-design presentation depth without restoring three mandatory files or fixed execution stages.
 
 For multiple independently verifiable outcomes, include a compact slice map in the existing plan/spec or project index: Slice ID | business goal | acceptance target | prerequisites | execution order. Check that all requested outcomes are covered; label explicitly deferred work rather than silently dropping it. Each slice should deliver an observable result across the necessary layers, not merely complete a database, controller or UI tier. Shared foundations may be prerequisite work, but their completion is not business delivery.
 
