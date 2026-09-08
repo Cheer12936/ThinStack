@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.0-alpha.3 — 2026-09-08
+
+- Rename the display name, folder and invocation from thinslack-code to ts-code.
+- Update installation tools and documentation; behavior and quality gates unchanged.
+- Archive earlier installations after installing ts-code to avoid duplicate active rules.
+
+
 ## 0.1.0-alpha.2 — 2026-09-08
 
 - Rename the displayed skill to Thinslack-Code and its folder/invocation to thinslack-code.

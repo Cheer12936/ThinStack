@@ -1,4 +1,4 @@
-"""Install/archive only the explicitly targeted thinslack-code skill; stdlib only."""
+"""Install/archive only the explicitly targeted ts-code skill; stdlib only."""
 import argparse
 from datetime import datetime, timezone
 from pathlib import Path
@@ -7,7 +7,7 @@ import shutil
 import tempfile
 import uuid
 
-NAME = "thinslack-code"
+NAME = "ts-code"
 SOURCE = Path(__file__).resolve().parents[1] / "skills" / NAME
 
 def check_skill(path):
@@ -17,8 +17,8 @@ def check_skill(path):
         if item.is_symlink():
             raise ValueError("Symlinks inside a skill are not supported")
     content = (path / "SKILL.md").read_text(encoding="utf-8")
-    if "name: thinslack-code" not in content.split("---")[1]:
-        raise ValueError("Target is not a thinslack-code skill")
+    if "name: ts-code" not in content.split("---")[1]:
+        raise ValueError("Target is not a ts-code skill")
 
 def manage(action, skills_dir, source=SOURCE):
     root = Path(skills_dir).expanduser().resolve()
@@ -38,7 +38,7 @@ def manage(action, skills_dir, source=SOURCE):
     if action != "uninstall":
         check_skill(Path(source))
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    backup_root = root.parent / (root.name + "-thinslack-code-backups")
+    backup_root = root.parent / (root.name + "-ts-code-backups")
     if backup_root.is_symlink():
         raise ValueError("Refusing a symlink backup directory")
     backup = backup_root / (stamp + "-" + uuid.uuid4().hex[:8])
@@ -46,7 +46,7 @@ def manage(action, skills_dir, source=SOURCE):
         backup_root.mkdir(exist_ok=True)
         target.rename(backup)
         return backup
-    stage = Path(tempfile.mkdtemp(prefix=".thinslack-code-stage-", dir=root))
+    stage = Path(tempfile.mkdtemp(prefix=".ts-code-stage-", dir=root))
     # The generated, checked staging directory contains only the copied package.
     try:
         shutil.copytree(source, stage, dirs_exist_ok=True)
@@ -62,7 +62,7 @@ def manage(action, skills_dir, source=SOURCE):
             raise
     finally:
         if stage.exists():
-            if stage.resolve().parent != root or not stage.name.startswith(".thinslack-code-stage-"):
+            if stage.resolve().parent != root or not stage.name.startswith(".ts-code-stage-"):
                 raise ValueError("Unexpected staging cleanup target")
             shutil.rmtree(stage)
     return backup if action == "update" else target
