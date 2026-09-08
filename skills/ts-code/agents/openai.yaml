@@ -1,6 +1,7 @@
 interface:
   display_name: "ts-code"
   short_description: "Adaptive design depth, risk gates and verified outcomes"
+  default_prompt: "Use $ts-code to plan my request as business slices, show the proposal for confirmation, then implement and verify the approved scope with visible slice progress."
   icon_small: assets/icon.svg
   icon_large: assets/icon.svg
 policy:

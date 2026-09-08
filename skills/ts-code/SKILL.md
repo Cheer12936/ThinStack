@@ -2,7 +2,7 @@
 name: ts-code
 license: MIT
 metadata:
-  version: "0.1.0-alpha.5"
+  version: "0.1.0-alpha.6"
 description: Design, implement or verify software changes through one adaptive harness. Use for feature specifications, project architecture, bug fixes, implementation or testing; preserve the requested scope while applying independent design and verification depths and evidence-based completion.
 ---
 
@@ -16,6 +16,11 @@ Honor the requested mode: DESIGN_ONLY produces requested design artifacts withou
 Choose the work type independently of mode: PROJECT_INIT establishes the minimum architecture and runnable foundation; SLICE delivers one observable business result against that foundation. For a new project or onboarding an existing one, read [project initialization](references/project-init.md). Existing projects are not reset or scaffolded again. For a slice, use relevant existing baseline constraints and describe only the delta. This skill is self-contained; no other skill is required.
 
 Before proposing a new project/feature plan, determine whether the request contains one or several independently verifiable business outcomes. Multiple outcomes MUST be decomposed into a visible slice map with each slice's goal, acceptance target, dependencies and execution order; cover the entire requested scope rather than hiding future outcomes in one large contract. Slice by usable business results, not database/backend/frontend layers or code volume. Keep small coherent requests as one slice; explain any consistency/atomicity reason an apparently large change must remain indivisible. Read [design](references/design.md) for decomposition details.
+
+## Visible delivery checkpoints
+- Before work: show the understood outcome and slice plan with acceptance targets, dependencies/order and scope of this run. Explicitly identify a single new feature as one slice. Obtain the existing one-time plan confirmation when required; do not add a second approval step.
+- During work: at meaningful slice transitions or blockers, identify the current slice, what is verified, and the next action. A slice is complete only with evidence. Do not narrate every tool call or invent progress percentages; keep the user informed during long work.
+- At handoff: account for every planned slice as verified, blocked or remaining, with concise evidence and the overall verdict. A single slice can use a short sentence. Local tiny fixes may compress the plan and result into one or two sentences, with no ceremonial table or new confirmation. For design/review-only work, report design/review progress rather than pretending implementation occurred.
 
 ## Risk assessment
 Assess blast radius, failure cost, uncertainty, security, data, compatibility and external dependencies—not code volume. State Design Depth, Verification Depth, Change Profiles and a brief rationale before editing. Default each uncertain dimension to STANDARD; LIGHT needs a positive justification. Raise the affected dimension to FULL: consequential unresolved architecture affects design, while high failure cost affects verification. Overrides below set minimum floors.

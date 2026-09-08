@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.0-alpha.6 — 2026-09-08
+
+- Make slice planning, meaningful progress transitions and per-slice final accounting consistently visible.
+- Keep tiny fixes concise and reuse the existing one-time approval; design/review modes retain their boundaries.
+- Add a suggested entry prompt and usage guidance without new workflow gates.
+
+
 ## 0.1.0-alpha.5 — 2026-09-08
 
 - Require a visible business-outcome slice map for multi-outcome requests before plan approval.

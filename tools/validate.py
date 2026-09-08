@@ -14,7 +14,7 @@ def validate(root=ROOT):
     if not text.startswith("---\n"):
         errors.append("Missing YAML frontmatter")
     header = text.split("---", 2)[1]
-    for key in ("name: ts-code", "license: MIT", 'version: "0.1.0-alpha.5"'):
+    for key in ("name: ts-code", "license: MIT", 'version: "0.1.0-alpha.6"'):
         if key not in header: errors.append("Missing metadata: " + key)
     if len(text.splitlines()) > 150: errors.append("Control plane exceeds 150 lines")
     main_links = set(re.findall(r"\]\((references/[^)#]+)", text))

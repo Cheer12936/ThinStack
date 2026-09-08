@@ -4,9 +4,16 @@
 
 An adaptive skill for project initialization, design, implementation and verification. Independent design/verification depths; no mandatory test-layer ladder. English skill instructions, Chinese quickstart.
 
-版本：`0.1.0-alpha.5`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
+版本：`0.1.0-alpha.6`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
 
 ## 使用
+
+推荐入口：
+
+> $ts-code 我的需求是：……。先展示切片方案，我确认后再执行；执行中告诉我当前切片，结束时逐片说明结果和证据。
+
+也可以直接说“用 ts-code 帮我完成……”。新项目/新功能默认先给方案；小修复保持简短直接。只规划时明确说“先只规划，不实现”；恢复时说“按已批准的切片方案继续”。
+
 
 在支持显式技能调用的客户端中输入 `$ts-code`，或明确说“使用 ts-code”。宿主是否自动触发技能取决于客户端支持；不要假定所有环境一致。
 
@@ -49,6 +56,10 @@ install 遇到已有同名目录会拒绝覆盖；update 先把旧目录归档�
 - 已批准同一具体方案，或你明确要求跳过方案确认：不重复询问。
 - 确认前不开始脚手架、产品代码、可执行测试或迁移；只做只读调查和你要求的设计。
 - 权限、迁移等风险底线不变；新增范围或重要未决问题仍需单独解决。
+
+## 可见进度
+
+开工前展示切片方案（单个新功能也明确是一片）；执行中在切片切换或阻塞时说明当前片、已验证结果和下一步；结束时沿用原切片名称逐片交账。小修复用一两句话即可，不强制表格，也不逐片重复确认。
 
 ## 大需求如何拆片
 

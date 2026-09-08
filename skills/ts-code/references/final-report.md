@@ -18,6 +18,8 @@ Evidence is current only if subsequent changes do not invalidate the behavior it
 
 For multi-slice DELIVERY, distinguish the current slice verdict from the whole request: list verified/blocked/remaining slices compactly and include relevant cross-slice journey proof. Do not announce overall GREEN after only the first slice or from isolated passing slice tests that leave their integration unproven.
 
+Use the same slice identifiers/names shown in the approved plan so the user can reconcile planned and delivered work. Pair each status with its business result and concise evidence or blocking condition. Do not hide unstarted slices behind a generic success summary. For a tiny single-slice fix, a sentence covering outcome and proof is sufficient; a table is optional.
+
 Use a concise form, omitting empty categories except the remaining-work verdict:
 
 GREEN or NOT GREEN
