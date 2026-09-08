@@ -1,8 +1,14 @@
 # Authorization Boundaries
 
-Keep the existing user interaction: a clear implementation request or accepted plan authorizes routine in-scope implementation, tests and fixes. The depth announcement and Green Contract are working commitments, not an extra approval ceremony. Analysis-only requests remain read-only.
+Choose confirmation by the requested change, not depth or file count. Local fixes and small adjustments that restore/preserve clear existing behavior may proceed directly. New projects and new business capabilities require a concise plan followed by one user confirmation before implementation, even when design is LIGHT. A local permission bug can proceed under its existing approved policy while still requiring FULL verification; a new permission policy is a consequential decision.
 
-Stop only the dependent action for an unresolved consequential product decision, work outside authorized scope, an unapproved change to a global contract, or a risky data operation whose target/treatment has not been authorized.
+Prepare the concrete proposal first: goal/acceptance, boundaries, intended approach, material data/API/UI impact and required proof. Reuse the Green Contract instead of creating duplicate paperwork. Then ask a short confirmation question explaining that ts-code requires one plan confirmation for a new project/feature. Before the reply, allow read-only investigation and requested design artifacts only; do not scaffold, implement, create executable tests or run migrations.
+
+Natural-language acceptance such as "ok", "do it" or "按这个做" approves the presented plan. A prior approval of the same concrete plan or explicit instruction to skip confirmation also suffices. Merely requesting a new feature does not approve a plan the user has not seen. Silence or elapsed time is never approval. Do not treat a changed conversation/session as loss of existing valid authorization. Analysis-only requests remain read-only.
+
+One approval covers routine implementation, tests, fixes, refactoring and in-scope depth escalation through completion. No repeated approval at backend/frontend/TDD/E2E transitions. If the initial approved plan explicitly includes initialization plus the first slice, both may run continuously; otherwise present the later new feature plan before starting it.
+
+After plan approval (or for direct local fixes), stop only the dependent action for an unresolved consequential product decision, work outside authorized scope, an unapproved change to a global contract, or a risky data operation whose target/treatment has not been authorized.
 
 Finish safe preparation first: identify the exact decision, affected behavior/data, proposed delta and relevant recovery approach. Ask one concrete question explaining why it is needed. Continue independent authorized work.
 

@@ -2,16 +2,16 @@
 name: ts-code
 license: MIT
 metadata:
-  version: "0.1.0-alpha.3"
+  version: "0.1.0-alpha.4"
 description: Design, implement or verify software changes through one adaptive harness. Use for feature specifications, project architecture, bug fixes, implementation or testing; preserve the requested scope while applying independent design and verification depths and evidence-based completion.
 ---
 
 # ts-code
 
 ## Core principle
-Own outcomes, risk, quality gates and evidence; the model owns implementation strategy. Preserve existing project conventions and authorization. A clear implementation request authorizes routine in-scope work; analysis-only requests remain read-only. No repeated approval ceremony. Read [authorization boundaries](references/preflight-and-gates.md) only when a consequential decision or scope boundary arises.
+Own outcomes, risk, quality gates and evidence; the model owns implementation strategy. Local fixes under clear existing requirements may proceed directly. For new projects or new business features, first present a concise plan and wait for one confirmation before implementation; an ordinary "build/add/initialize" request alone does not approve an unseen plan. Reuse prior approval of the same concrete plan, or an explicit user instruction to skip plan confirmation. After approval, execute continuously within scope without repeated stage confirmations. Analysis-only requests remain read-only. Read [authorization boundaries](references/preflight-and-gates.md) for new project/feature planning or a consequential decision/scope boundary.
 
-Honor the requested mode: DESIGN_ONLY produces requested design artifacts without product code, migrations or executable tests; VERIFY_ONLY plans/reviews or creates/runs tests as requested without product fixes; DELIVERY implements and verifies within authorization. Depth never expands mode or permission. Existing explicit implementation/TDD authorization remains valid. Design-only output reports readiness, and verification-only output reports tested scope; neither implies implemented delivery. In these modes the implementation loop is inactive and no new contract/scaffold is required merely to perform a review. Reuse adequate existing requirements; fill only consequential gaps.
+Honor the requested mode: DESIGN_ONLY produces requested design artifacts without product code, migrations or executable tests; VERIFY_ONLY plans/reviews or creates/runs tests as requested without product fixes; DELIVERY implements and verifies within authorization. Depth never expands mode or permission. Existing approval of a concrete implementation/TDD plan remains valid. Design-only output reports readiness, and verification-only output reports tested scope; neither implies implemented delivery. In these modes the implementation loop is inactive and no new contract/scaffold is required merely to perform a review. Reuse adequate existing requirements; fill only consequential gaps.
 
 Choose the work type independently of mode: PROJECT_INIT establishes the minimum architecture and runnable foundation; SLICE delivers one observable business result against that foundation. For a new project or onboarding an existing one, read [project initialization](references/project-init.md). Existing projects are not reset or scaffolded again. For a slice, use relevant existing baseline constraints and describe only the delta. This skill is self-contained; no other skill is required.
 
@@ -47,6 +47,8 @@ Before any product-code change, record:
 - **Required Proof:** checks/evidence mapped to those behaviors and constraints, with a short sufficiency rationale.
 
 Keep it brief; link adequate existing specs. For LIGHT/LIGHT, a visible message suffices. Otherwise use the existing feature documents, or SPEC.md for the contract and RUN.md for evidence; do not create competing copies. Read [checkpoint/resume](references/checkpoint-resume.md) when persisting or resuming work.
+
+For a new project/feature, the concise plan includes this contract, intended approach, material impact and any decision needed. Present it before requesting confirmation; do not create a separate approval document or treat silence as approval. While awaiting approval, do only read-only investigation and requested planning artifacts, not scaffolding, product code, executable tests or migrations. A pending plan is awaiting confirmation, not a failed GREEN check.
 
 ## Autonomous loop
 Implement -> verify -> on failure diagnose/fix -> verify again, until the contract is proven. The model chooses tactics, sequence and test layers. Prefer test-first for bug regressions, complex business rules, deterministic domain logic and high-risk behavior; do not force RED for every task. Honor explicit TDD requests.

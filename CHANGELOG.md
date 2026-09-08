@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.4 — 2026-09-08
+
+- Authorization behavior change: new projects and new business features show a concise concrete plan and wait for one confirmation before implementation.
+- Local understood fixes remain direct; the same already-approved plan or an explicit instruction to skip confirmation avoids duplicate approval.
+- Approval covers continuous in-scope implementation and verification; pending confirmation survives resume.
+- No new repeated stage gates, test-layer requirements or reduced evidence floors.
+
+
 ## 0.1.0-alpha.3 — 2026-09-08
 
 - Rename the display name, folder and invocation from thinslack-code to ts-code.
