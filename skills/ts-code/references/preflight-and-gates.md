@@ -1,5 +1,7 @@
 # Authorization Boundaries
 
+FAST_FIX is not a proposal stage: an authorized localized repair follows the diagnostic-first route in SKILL.md without re-planning the existing project. Escalation for discovered risk expands relevant analysis/proof; it does not automatically revoke a valid approved plan. Only genuinely new decisions/scope or unapproved risky actions need a further question.
+
 Choose confirmation by the requested change, not depth or file count. Local fixes and small adjustments that restore/preserve clear existing behavior may proceed directly. New projects and new business capabilities require the substantive structured proposal specified in SKILL.md followed by one user confirmation before implementation, even when design is LIGHT. A local permission bug can proceed under its existing approved policy while still requiring FULL verification; a new permission policy is a consequential decision.
 
 Prepare and display the applicable baseline/slice proposal first, including its design decisions, rationale, acceptance and required proof. Embed Green Contract as a summary; it must not replace the design sections. Then ask a short confirmation question explaining that ts-code requires one plan confirmation for a new project/feature. Before the reply, allow read-only investigation and requested design artifacts only; do not scaffold, implement, create executable tests or run migrations.

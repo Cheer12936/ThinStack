@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.9 — 2026-09-09
+
+- Add explicit FAST_FIX versus PLANNED_CHANGE routing before templates or document creation.
+- Local bugs start with 1–2 high-information diagnostics; expand only to resolve evidence-backed uncertainty or wider impact.
+- Prohibit opportunistic refactoring, general audits, planning scaffolds and unrelated verification for fast fixes.
+- Discovered data/security/architecture risks activate relevant full analysis/proof while preserving existing valid plans and approvals.
+
+
 ## 0.1.0-alpha.8 — 2026-09-09
 
 - Require a confirmed persisted relevant baseline before new business-slice implementation.

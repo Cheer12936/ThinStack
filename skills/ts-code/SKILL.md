@@ -2,11 +2,18 @@
 name: ts-code
 license: MIT
 metadata:
-  version: "0.1.0-alpha.8"
+  version: "0.1.0-alpha.9"
 description: Design, implement or verify software changes through one adaptive harness. Use for feature specifications, project architecture, bug fixes, implementation or testing; preserve the requested scope while applying independent design and verification depths and evidence-based completion.
 ---
 
 # ts-code
+
+## Route before ceremony
+Choose the route before loading design templates or creating documents. PLANNED_CHANGE covers new projects, new business capabilities, large multi-outcome work and architecture changes: use the full design and slice-planning rules below. FAST_FIX covers a clear, localized defect under existing requirements: start with only 1–2 highest-information diagnostic checks (for example the failing request/log and its immediate code path, or a targeted reproduction). These are diagnostic questions, not a quota of shell calls; do not disguise a repository-wide scan as one check.
+
+For FAST_FIX, give one short statement of the symptom, expected behavior and first check. Do not load full design/baseline templates, generate a slice roadmap or SPEC/RUN scaffolding, initiate a general audit, or ask to reapprove existing plans. Diagnose the direct cause, make the smallest sufficient correction and verify the original failure plus directly affected behavior. No opportunistic refactor, adjacent feature work, new test framework, broad regression or unrelated cleanup. Existing plans and contracts remain in force; read only the relevant portion. Stop expanding once the cause is corrected and sufficient scoped proof passes. Briefly report cause, correction and evidence.
+
+After the initial checks, expand diagnosis only when concrete evidence leaves the cause unresolved, disproves the hypothesis or exposes wider impact; explain the next specific uncertainty rather than restarting a planning ritual or guessing a fix. If evidence shows data integrity/history, security/permission or architecture/contract risk, leave FAST_FIX and apply the full relevant impact/proof rules before dependent changes. Escalate the affected depth, preserving override floors; reuse existing valid design/approval instead of redesigning established policy. Merely being in a database-backed app or login page is not evidence of such risk. Repository-required checks and explicit user requirements still apply; unavailable proof cannot be hidden by the fast route.
 
 ## Core principle
 Own outcomes, risk, quality gates and evidence; the model owns implementation strategy. Local fixes under clear existing requirements may proceed directly. For new projects or new business features, first present a substantive structured design proposal and wait for one confirmation before implementation; an ordinary "build/add/initialize" request alone does not approve an unseen plan. Reuse prior approval of the same concrete plan, or an explicit user instruction to skip plan confirmation. After approval, execute continuously within scope without repeated stage confirmations. Analysis-only requests remain read-only. Read [authorization boundaries](references/preflight-and-gates.md) for new project/feature planning or a consequential decision/scope boundary.
@@ -57,7 +64,7 @@ Before any product-code change, record:
 - **Constraints:** invariants and boundaries to preserve.
 - **Required Proof:** checks/evidence mapped to those behaviors and constraints, with a short sufficiency rationale.
 
-The contract remains a short verification summary within the full proposal, not a limit on proposal detail. Link adequate existing specs. For local LIGHT/LIGHT fixes, a visible message suffices. Otherwise use the existing feature documents, or SPEC.md for the contract/design and RUN.md for evidence; restore design substance without requiring separate SPEC/ACCEPTANCE/DESIGN files. Read [checkpoint/resume](references/checkpoint-resume.md) when persisting or resuming work.
+The contract remains a short verification summary within the full proposal, not a limit on proposal detail. Link adequate existing specs. FAST_FIX uses its short visible symptom/expected behavior/check statement as the contract; no new planning documents regardless of diagnostic effort. Otherwise use the existing feature documents, or SPEC.md for the contract/design and RUN.md for evidence; restore design substance without requiring separate SPEC/ACCEPTANCE/DESIGN files. Read [checkpoint/resume](references/checkpoint-resume.md) when persisting or resuming work.
 
 For a new project/feature, the structured proposal includes this contract and the applicable design sections, rationale, material impact and decisions needed. Present it before requesting confirmation; do not create a separate approval document or treat silence as approval. While awaiting approval, do only read-only investigation and requested planning artifacts, not scaffolding, product code, executable tests or migrations. A pending plan is awaiting confirmation, not a failed GREEN check.
 

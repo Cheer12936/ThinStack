@@ -2,6 +2,8 @@
 
 Read when test strategy has a consequential gap or test work is requested. Consume existing acceptance, constraints and Required Proof; do not regenerate the contract or independently lower the selected depths.
 
+FAST_FIX normally does not need this reference. If already loaded, do not turn its layer menu into a checklist: use the original failure/reproduction, existing targeted checks and directly affected regression. Add a focused regression test only when it usefully guards the demonstrated defect; do not introduce test infrastructure for a trivial repair. Broader checks require observed impact, a relevant risk override or an explicit repository/user gate. Diagnose an unrelated failure separately without absorbing its repair into scope.
+
 ## Scope and oracle
 
 For a local defect, a clear request plus verified existing contract may be enough. Otherwise use relevant canonical feature/architecture decisions. Code is not the expected-result oracle. Report only ambiguities that prevent defensible assertions.

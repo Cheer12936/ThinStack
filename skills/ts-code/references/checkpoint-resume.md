@@ -1,5 +1,7 @@
 # Contract, Checkpoint and Resume
 
+FAST_FIX does not create new planning/checkpoint scaffolding. If interrupted, record only the unresolved diagnostic fact and next check in an existing task record when needed; do not restart a project plan on resume. The fuller persistence guidance below applies to planned or escalated work.
+
 Use the established project layout. For new work beyond LIGHT/LIGHT, default to SPEC.md for the Green Contract and needed design, and RUN.md for progress/evidence. Split only substantial material. Existing separate ACCEPTANCE, DESIGN, TEST_PLAN, TEST_RESULT, RUN_STATE and IMPLEMENTATION_REPORT files remain usable; link instead of duplicating them.
 
 A LIGHT/LIGHT contract can remain in a visible message with final evidence. If work becomes long-running or escalates, persist the contract and checkpoint in the existing feature location or the compact layout.

@@ -4,7 +4,7 @@
 
 An adaptive skill for project initialization, design, implementation and verification. Independent design/verification depths; no mandatory test-layer ladder. English skill instructions, Chinese quickstart.
 
-版本：`0.1.0-alpha.8`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
+版本：`0.1.0-alpha.9`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
 
 ## 使用
 
@@ -48,6 +48,15 @@ python tools/manage.py uninstall --skills-dir "你的客户端技能目录"
 install 遇到已有同名目录会拒绝覆盖；update 先把旧目录归档到技能目录旁的备份目录；uninstall 也只归档而不删除。工具输出准确备份位置，恢复时将归档目录复制回原技能目录。工具不会移除其他技能或旧兼容入口。
 
 从旧版升级：本版统一使用 `ts-code`；旧名称为 `slice-to-green` 和 `thinslack-code`。先安装新名称，再将旧技能目录移出发现目录；不要同时保留两套活动规则。安装工具不会自动改动旧目录。新版本不再提供 spec-to-design / spec-to-tests。确认主技能安装成功后，可自行归档旧入口；将旧调用改为“ts-code 只设计/只测试”。新技能全部内部引用自包含。
+
+## 明确分流
+
+- 新项目、新业务能力、大功能、架构调整：完整设计与 Slice 规划。
+- 明确的小 Bug：先做 1～2 个信息量最高的诊断，只修直接原因，只验证原故障及直接受影响范围。
+- 不因一次小修创建规划文档、全仓审计、顺手重构或重跑项目规划；已有规划继续有效。
+- 初步诊断无法定位时，说明下一项具体疑点再定向扩查，不能猜修，也不能把全仓扫描包装成一个诊断。
+- 发现数据完整性/历史、安全权限、架构或契约风险后，再进入相应完整分析与验证；复用已有设计和授权，不重复仪式。
+- 验证通过即停止扩大范围；明确的仓库必需检查和用户要求仍须遵守。
 
 ## 默认确认方式
 
