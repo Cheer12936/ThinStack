@@ -2,7 +2,7 @@
 name: ts-code
 license: MIT
 metadata:
-  version: "0.1.0-alpha.10"
+  version: "0.1.0-alpha.11"
 description: Design, implement or verify software changes through one adaptive harness. Use for feature specifications, project architecture, bug fixes, implementation or testing; preserve the requested scope while applying independent design and verification depths and evidence-based completion.
 ---
 
@@ -29,6 +29,8 @@ Choose the work type independently of mode: FAST_FIX restores a narrowly defined
 Baseline gate: for a new project, clarify material product/architecture questions through discussion before finalizing the baseline proposal. For an existing project, inspect its actual code, tests, schema/migrations and configuration to create, verify or supplement the baseline; do not rely on conversation or old docs alone. Before new business-slice implementation, persist a confirmed, relevant BASELINE_READY record in ARCHITECTURAL_BASELINE.md (or the established equivalent) with sources, approval and unresolved limits. Missing/unready baseline blocks dependent implementation, not investigation or requested design. Reuse valid existing approval and combine baseline/slice confirmation when sufficient. A narrowly scoped fix restoring clear existing behavior may skip project-wide baselining; record that exception briefly. This exception does not cover new capabilities or global-rule changes. Read-only reviews and early brainstorming do not require forced document writes.
 
 Before proposing a new project/feature plan, determine whether the request contains one or several independently verifiable business outcomes. Multiple outcomes MUST be decomposed into a visible slice map with each slice's goal, acceptance target, dependencies and execution order; cover the entire requested scope rather than hiding future outcomes in one large contract. Slice by usable business results, not database/backend/frontend layers or code volume. Keep small coherent requests as one slice; explain any consistency/atomicity reason an apparently large change must remain indivisible. Read [design](references/design.md) for decomposition details.
+
+Use one project-wide slice registry: docs/SLICES.md. All planned business slices, including single-feature additions, use stable consecutive names Slice 1, Slice 2, etc.; never restart numbering per module, request or session, or create PM/CP-style slice namespaces. Reuse the registry in proposals, progress and final reports, and link detailed designs/evidence rather than copying them. Read [registry and resume rules](references/checkpoint-resume.md) when adding, mapping or updating slices. FAST_FIX does not create a registry or new slice just for a small repair; refer to an existing related slice when useful. Read-only reviews do not force writes.
 
 ## Visible delivery checkpoints
 - Before work: show the understood outcome and slice plan with acceptance targets, dependencies/order and scope of this run. Explicitly identify a single new feature as one slice. Obtain the existing one-time plan confirmation when required; do not add a second approval step.

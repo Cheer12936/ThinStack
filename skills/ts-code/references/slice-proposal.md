@@ -16,7 +16,8 @@ Explain the problem, intended result and success signal.
 - Dependencies and affected existing behavior.
 
 ## 2. Slice map and execution scope
-For multiple outcomes: slice ID | business goal | acceptance target | prerequisites | order | included in this run.
+Use project-wide Slice N names from docs/SLICES.md, never per-module identifiers. Show the current request as a view of that registry, not a separate numbered plan.
+For multiple outcomes: Slice N / business name | business goal | acceptance target | prerequisites | order | included in this run.
 For a single outcome, explicitly identify one slice. Explain atomic coupling if the change cannot safely be divided. Cover the full requested scope while detailing only the current slice below.
 
 ## 3. Acceptance criteria
@@ -62,4 +63,4 @@ State what is ready, what is unresolved, and assumptions later implementation mu
 List only the decisions the user actually needs to make, then request the existing one-time confirmation for the mapped scope. Reuse prior valid approval rather than restarting it.
 
 ## Persistence
-Keep the existing project layout. In split layouts: SPEC owns boundary/rules/slice map, ACCEPTANCE owns criteria, DESIGN owns deltas/compatibility/traceability. A combined SPEC.md is equally valid for new work. File count is not a completion gate; conversation-only proposals are sufficient before authorization when no persistence was requested.
+Keep the existing project layout. In split layouts: SPEC owns boundary/rules and links the canonical docs/SLICES.md map, ACCEPTANCE owns criteria, DESIGN owns deltas/compatibility/traceability. A combined SPEC.md is equally valid for new work. File count is not a completion gate; conversation-only proposals are sufficient before authorization when no persistence was requested.

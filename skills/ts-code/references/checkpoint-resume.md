@@ -14,7 +14,17 @@ Keep only:
 - next action or blocking condition;
 - proof items with status, evidence paths and tested revision/worktree context.
 
-For multi-slice work, keep the slice map and each slice's state (planned / active / verified / blocked), current slice, verified prerequisites and next eligible slice in the existing index/run record. Link individual evidence instead of copying it. Resume the unfinished approved plan, not a new monolithic implementation; prior approval covers only the mapped scope. A verified slice does not imply the remaining slices or overall journey are GREEN.
+## Single project-wide slice registry
+
+docs/SLICES.md is the one authoritative directory of business slices, including projects with only one slice. Read it and any legacy index before assigning IDs. Use Slice 1, Slice 2, etc. plus the business name, never module prefixes or numbering reset per request/session. Allocate the next number above the highest assigned number; cancelled rows stay cancelled, IDs are never reused or renumbered. Dependencies determine execution order independently of numeric order. Modules are optional labels, not another numbering scheme. FR/AC/API/DB requirement IDs are not slice IDs and retain their established forms.
+
+Default columns: Slice | Business goal / acceptance target | Status | Dependencies | Design / evidence. Use planned, active, verified, blocked or cancelled (or clear local-language equivalents); keep the current and next eligible slice visible. Link existing detailed documents without renaming their folders or duplicating summaries. Update the affected row after material state changes; historical verification is dated evidence, not automatically current GREEN.
+
+For existing PM-01/CP-01 or other legacy slice names, establish a one-time mapping here: Slice N -> original ID and document link. Preserve original files, historical references and factual statuses; mapping is not revalidation. Resolve duplicate/ambiguous identities from evidence before numbering; never silently merge distinct slices. Existing indexes may link here but must not remain competing writable inventories. Do not broadly rewrite historical files just for naming.
+
+Before approval, show proposed numbered rows in the conversation; after authorization persist/update docs/SLICES.md before planned implementation. A row never grants implementation permission. Reuse valid approval. Design-only work may persist the registry when requested; read-only work previews only. FAST_FIX never bootstraps the registry or creates a new slice; optionally link an existing related slice's evidence if useful.
+
+Resume through this registry and linked run records: current slice, verified prerequisites and next eligible slice. RUN.md links here rather than maintaining a second map. A verified slice does not imply the remaining slices or whole journey are GREEN.
 
 Update at meaningful stopping points and when risk or Required Proof changes. Do not maintain a second project status system.
 

@@ -38,7 +38,8 @@ API style/versioning, request/response and error conventions, pagination/filteri
 Show allowed dependencies and prerequisites in a clear list, table or small diagram. Explain which module owns facts and which consumes them. Avoid coupling modules solely to mirror UI pages.
 
 ## 8. Business slice roadmap
-Order | slice ID/name | observable business outcome | acceptance target | prerequisites | authorized now / later.
+Show rows from the single docs/SLICES.md registry using project-wide consecutive Slice N names; follow checkpoint-resume.md for allocation and old-ID mapping.
+Order | Slice N / business name | observable business outcome | acceptance target | prerequisites | authorized now / later.
 Cover all requested outcomes. Separate runnable foundation from business delivery. Fully detail only the current slice using the slice proposal format if it is requested; do not predesign every later slice.
 
 ## 9. Foundation Green Contract and proof

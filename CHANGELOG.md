@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.0-alpha.11 — 2026-09-09
+
+- One canonical docs/SLICES.md per project; stable consecutive Slice N names across modules, requests and sessions.
+- Registry links goals, status, dependencies, design and evidence; legacy IDs map without rewriting historical files.
+- No cancelled-ID reuse or per-module inventories; FAST_FIX does not create new slices or registry scaffolding.
+
+
 ## 0.1.0-alpha.10 — 2026-09-09
 
 - FAST_FIX is a LIGHT/LIGHT work type with at most 3 high-discrimination diagnostic steps, persistent count, frozen repair scope and mandatory stopping after scoped proof passes.

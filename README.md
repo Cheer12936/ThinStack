@@ -4,7 +4,7 @@
 
 An adaptive skill for project initialization, design, implementation and verification. Independent design/verification depths; no mandatory test-layer ladder. English skill instructions, Chinese quickstart.
 
-版本：`0.1.0-alpha.10`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
+版本：`0.1.0-alpha.11`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
 
 ## 使用
 
@@ -87,6 +87,14 @@ install 遇到已有同名目录会拒绝覆盖；update 先把旧目录归档�
 ## 可见进度
 
 开工前展示切片方案（单个新功能也明确是一片）；执行中在切片切换或阻塞时说明当前片、已验证结果和下一步；结束时沿用原切片名称逐片交账。小修复用一两句话即可，不强制表格，也不逐片重复确认。
+
+## 统一切片入口
+
+全项目只维护一份 docs/SLICES.md，使用 Slice 1、Slice 2……连续编号，不按模块或新需求重新编号。每行包含业务目标/验收目标、状态、依赖和详细方案/证据链接。方案、进度、最终总结使用同一个编号和名称。
+
+新增取下一个编号；取消保留行，不回收、不重排。旧 PM-01、CP-01 等通过一次映射关联到统一编号，保留旧文件与链接，不重写历史或冒充重新验证。业务模块可作标签；FR/AC/API 等需求标识不受影响。
+
+小 Bug 不强制建目录或新增切片，优先关联已有片。纯只读审查不写文件；新规划确认后保存统一目录再实施。详细设计仍按需存于已有位置，不把整份规格堆入总表。
 
 ## 大需求如何拆片
 
