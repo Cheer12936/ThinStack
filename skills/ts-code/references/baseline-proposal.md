@@ -1,9 +1,11 @@
 # Architectural Baseline Proposal
 
-Use for a new project or a requested full baseline design before implementation confirmation. Present in the user's language. Restore the former spec-to-design structure below with concrete recommendations and reasons, not just a scaffolding checklist. Keep the durable skeleton focused on current scope; do not invent all future features.
+Use for a new project, code-derived onboarding of an existing project, or a requested full baseline design before implementation confirmation. Present in the user's language. Restore the former spec-to-design structure below with concrete recommendations and reasons, not just a scaffolding checklist. Keep the durable skeleton focused on current scope; do not invent all future features.
 
 ## 0. Status and source context
 Product, version/date, source requirements, mode, design/verification depths, existing constraints, proposed/approved status, assumptions and blocking decisions. Never conflate baseline readiness with approval or implemented GREEN.
+
+For existing code include source paths/revision or worktree context and claim provenance: OBSERVED / VERIFIED / PROPOSED / UNKNOWN. Document discrepancies between code and prior rules, with affected slices and resolution needs. Do not quote secrets or treat tests that were only read as executed proof.
 
 ## 1. Product overview and scope
 Explain the problem, product goal, first usable outcome and success criteria.
@@ -48,6 +50,8 @@ Check module/domain/data/auth/API assumptions agree. Distinguish agreed choices,
 
 ## 11. Baseline readiness and confirmation
 State readiness, unresolved decisions, retained assumptions and the proposed next slice. Ask for one confirmation of the concrete scope if not already approved; do not begin scaffolding or code while waiting.
+
+Record the baseline gate explicitly: DRAFT / BASELINE_NOT_READY / BASELINE_READY plus persistence state and approval source. READY requires relevant decisions resolved, scope approved and the baseline saved; existence of a draft file alone is insufficient. Explain which intended slices remain blocked by unresolved architecture. No dependent business implementation until the gate is satisfied, subject only to the narrow local-fix exception in SKILL.md.
 
 ## Persistence and document index
 Normally ARCHITECTURAL_BASELINE.md owns the baseline; list real supporting files only where they exist or are proposed for substantial content. Existing MODULE_MAP / DOMAIN_MODEL / DATA_RULES / API_CONVENTIONS / PERMISSION_MODEL / STATE_RULES / ADR layouts remain valid. Do not require seven architecture files for a small project or create empty placeholders. Preserve current status/evidence separately in the established run record when implementation starts.

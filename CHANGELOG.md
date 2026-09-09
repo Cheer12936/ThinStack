@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.8 — 2026-09-09
+
+- Require a confirmed persisted relevant baseline before new business-slice implementation.
+- Existing projects must derive/supplement baseline claims from actual code, tests, schema/migrations and configuration.
+- Separate observed, verified, proposed and unknown claims; code defects are not approved rules.
+- Retain narrow local-fix and read-only exceptions, and combine baseline/slice approval when appropriate.
+
+
 ## 0.1.0-alpha.7 — 2026-09-08
 
 - Restore substantive spec-to-design-style baseline and slice proposal formats before plan approval.

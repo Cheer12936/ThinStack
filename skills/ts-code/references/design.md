@@ -6,7 +6,7 @@ Read for unresolved consequential design decisions or a design-only request. Aut
 
 Use the project's current canonical decisions and explicit user corrections. Current implementation shows what exists, not what should exist. Preserve stable IDs and existing layouts; link adequate material and fill gaps rather than regenerating equivalent documents.
 
-A missing architecture baseline does not block a local understood fix. Do not invent approved global rules. For new architecture establish the durable skeleton before dependent implementation; for an existing system describe the delta only.
+A missing architecture baseline does not block a local understood fix, investigation or design. For new business implementation, however, the baseline gate in SKILL.md requires a confirmed persisted baseline first. For existing projects derive missing architecture from actual code/tests/schema/config, validate relevant old documentation, and separate observed behavior from approved rules and unresolved findings. Once the baseline is ready, design slices by delta. Do not invent approved global rules or silently institutionalize a code defect.
 
 ## Structured proposal output
 

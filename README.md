@@ -4,7 +4,7 @@
 
 An adaptive skill for project initialization, design, implementation and verification. Independent design/verification depths; no mandatory test-layer ladder. English skill instructions, Chinese quickstart.
 
-版本：`0.1.0-alpha.7`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
+版本：`0.1.0-alpha.8`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
 
 ## 使用
 
@@ -56,6 +56,14 @@ install 遇到已有同名目录会拒绝覆盖；update 先把旧目录归档�
 - 已批准同一具体方案，或你明确要求跳过方案确认：不重复询问。
 - 确认前不开始脚手架、产品代码、可执行测试或迁移；只做只读调查和你要求的设计。
 - 权限、迁移等风险底线不变；新增范围或重要未决问题仍需单独解决。
+
+## 基线门槛
+
+新项目先讨论重要需求与架构问题，形成并确认基线；已有项目也必须根据实际代码、测试、schema/迁移和配置补齐或验证基线，不能只靠旧文档或聊天。区分代码中观察到的事实、已执行验证、未来提案和未知项，不把已有 bug 当作批准的架构规则。
+
+开始新的业务切片实现前，相关基线必须确认、落盘并达到 BASELINE_READY；一份 ARCHITECTURAL_BASELINE.md 即可起步。基线和切片方案可以一次确认，之后不重复审批。无法保存或存在影响当前片的重要未决问题时，不开始依赖实现。
+
+明确的小修复保留窄例外：说明适用的已有规则即可，不强制全项目建档；新功能和全局规则变更不能冒用此例外。纯讨论/只读审查不强制写文件，显式要求项目建档时仍需交付基线。
 
 ## 方案格式
 

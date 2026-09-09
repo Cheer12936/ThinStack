@@ -8,6 +8,7 @@ Keep only:
 - goal, plan status (awaiting confirmation / approved), and authorization source linked to the concrete approved scope;
 - Design Depth, Verification Depth, matching profiles and override floors;
 - contract location, material assumptions and reasons for any approved scope/depth revision;
+- baseline path/version, relevant readiness and approval/evidence references, or the explicit narrow local-fix exception;
 - next action or blocking condition;
 - proof items with status, evidence paths and tested revision/worktree context.
 
