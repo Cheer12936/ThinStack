@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.10 — 2026-09-09
+
+- FAST_FIX is a LIGHT/LIGHT work type with at most 3 high-discrimination diagnostic steps, persistent count, frozen repair scope and mandatory stopping after scoped proof passes.
+- Replace one-way escalation with evidence-based recalibration; lower depths need no user approval when risk assumptions are disproved. Actual applicable proof floors remain binding.
+- Separate authoring production migrations from locally applying unchanged existing migrations with bounded target/backup/execution/function evidence.
+- GREEN covers the current repair promise, not nearby modules or the full project roadmap; speculative risks cannot accumulate verification scope.
+
+
 ## 0.1.0-alpha.9 — 2026-09-09
 
 - Add explicit FAST_FIX versus PLANNED_CHANGE routing before templates or document creation.

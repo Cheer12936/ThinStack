@@ -2,7 +2,7 @@
 
 For DESIGN_ONLY report design readiness and unresolved decisions; for VERIFY_ONLY report reviewed/tested scope and whether checks were executed. These modes do not require a delivery verdict or new RUN.md merely to finish a review. The GREEN/NOT GREEN form below applies to DELIVERY only.
 
-Use the existing result document, otherwise RUN.md; LIGHT/LIGHT may report in the response. Do not create a report that repeats the contract.
+FAST_FIX reports the frozen repair promise, direct cause, correction and actual affected-function proof in a few lines; no module-wide certification or new report document. Use the existing result document for planned work, otherwise RUN.md; LIGHT/LIGHT may report in the response. Do not create a report that repeats the contract.
 
 For each required proof item record:
 - acceptance/constraint or override it supports;
@@ -12,7 +12,7 @@ For each required proof item record:
 
 Command exit status alone does not show meaningful assertions ran: identify the behavior checked and pass/fail/skip result. For visual proof retain a screenshot/render artifact and the observation tied to the relevant criterion. Do not claim machine validation of subjective aesthetics.
 
-Evidence is current only if subsequent changes do not invalidate the behavior it proves. Existing evidence can be reused with that relevance established. No known regression means no known regression left unresolved within the affected system, not a guarantee against every unknown defect; disclose unrelated pre-existing failures without calling their checks passed.
+Evidence is current only if subsequent changes do not invalidate the behavior it proves. Existing evidence can be reused with that relevance established. For FAST_FIX, the regression check concerns demonstrated side effects of this correction and its promised behavior, not every pre-existing issue in nearby modules. Disclose relevant observed limits without claiming unseen risks were audited. Unrelated findings do not expand Required Proof.
 
 ## Final response
 
@@ -29,6 +29,6 @@ GREEN or NOT GREEN
 - Risk: material findings, integration evidence limits or relevant contract revisions.
 - Remaining: none, or missing work/proof, why blocked, and conditions to continue.
 
-GREEN requires all contract acceptance and constraints proven, required quality gates passed, no known regression and no unresolved high-risk finding. NOT GREEN applies to any missing/failed/skipped/stale required proof. Do not sum passing tests to hide a missing criterion.
+GREEN requires the current scoped acceptance and constraints proven, applicable required gates passed, no demonstrated repair-caused regression and no unresolved relevant high-risk finding. NOT GREEN applies to missing/failed/skipped/stale proof required for that promise. Once these conditions pass, stop investigating; do not add hypothetical cases or reinterpret the repair as a whole-module release audit. Do not sum passing tests to hide a missing criterion.
 
 For external integrations report synthetic contract checks, sanitized real-response replay and live integration separately. A missing live check blocks GREEN whenever actual live behavior is required. A mock-only scope can be proven only as mock/adapter behavior; label that scope explicitly and never imply operational readiness.

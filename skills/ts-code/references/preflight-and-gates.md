@@ -16,6 +16,6 @@ Finish safe preparation first: identify the exact decision, affected behavior/da
 
 A sufficiently explicit user correction can authorize updating old canonical decisions; do not request the same approval again. For risky data operations prepare target-specific preview and backup/recovery evidence; revalidate mutable references at execution time.
 
-User approval permits action; it is not verification evidence. Approval of risk, a lower depth or a deferred check does not turn missing proof into PASS. If scope explicitly changes, record the reason and exclusions; judge GREEN only for the revised behavior actually proven. Never claim a removed/deferred behavior works.
+User approval permits action; it is not verification evidence. Evidence-based depth recalibration needs no extra approval, but risk acceptance or deferral does not turn missing necessary proof into PASS. If scope explicitly changes, record the reason and exclusions; judge GREEN only for the revised behavior actually proven. Never claim a removed/deferred behavior works.
 
 Legacy labels such as SPEC_DRIFT and BLOCKED_GATE remain navigation metadata. They neither grant permission nor automatically require another approval.

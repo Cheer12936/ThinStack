@@ -1,8 +1,8 @@
 # Verification Capability
 
-Read when test strategy has a consequential gap or test work is requested. Consume existing acceptance, constraints and Required Proof; do not regenerate the contract or independently lower the selected depths.
+Read when test strategy has a consequential gap or test work is requested. Consume existing acceptance, constraints and Required Proof; do not regenerate the contract. Recalibrate depth/proof only from new evidence as allowed by SKILL.md, not to conceal failing necessary checks.
 
-FAST_FIX normally does not need this reference. If already loaded, do not turn its layer menu into a checklist: use the original failure/reproduction, existing targeted checks and directly affected regression. Add a focused regression test only when it usefully guards the demonstrated defect; do not introduce test infrastructure for a trivial repair. Broader checks require observed impact, a relevant risk override or an explicit repository/user gate. Diagnose an unrelated failure separately without absorbing its repair into scope.
+FAST_FIX normally does not need this reference. If already loaded, do not turn its layer menu into a checklist: use the original failure/reproduction, existing targeted checks and directly affected regression. Add a focused regression test only when it usefully guards the demonstrated defect; do not introduce test infrastructure for a trivial repair. Honor the 3-step diagnostic bound and frozen repair scope. Broader checks require concrete observed impact or an applicable explicit gate; adjacent modules alone do not trigger a profile. Once the scoped proof passes, stop. Diagnose an unrelated failure separately without absorbing its repair into scope.
 
 ## Scope and oracle
 

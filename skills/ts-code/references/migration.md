@@ -1,11 +1,17 @@
-# Migration
+# Migration: authoring versus local repair
 
-Any database migration requires Design at least STANDARD and Verification FULL, including additive migrations.
+## New or modified production-bound migration
+Creating or changing a migration intended for production requires Design at least STANDARD and Verification FULL. Identify schema/data delta, old-data assumptions, affected readers/writers and compatibility treatment. Prove it against an isolated representative prior state, preserving required data/references and exercising affected behavior. Verify restart/concurrency and rollback or forward recovery where applicable; no destructive down-migration merely for symmetry.
 
-Before dependent changes, identify the schema/data delta, old-data assumptions, affected readers/writers and transaction/compatibility treatment. Required Proof includes applying the migration to an isolated representative prior state, verifying resulting constraints and preserved data/references, and exercising affected application behavior.
+## Local application of an unchanged existing migration
+A missed local migration can remain FAST_FIX LIGHT/LIGHT. Bound proof to:
+- Confirm the local target and exact pending migration using current status and inspect the script for unsafe/destructive or historical-data effects. A local database may still contain valuable data.
+- Establish an appropriate backup/recovery point before execution; do not alter or generate migration code, reset data or run unrelated pending changes.
+- Apply the intended existing migration through the established runner and verify success plus updated migration status.
+- Reproduce the originally failing request/page and confirm the affected function is restored.
 
-Verify interruption, repeat/restart and concurrency behavior where the migration mechanism makes them relevant. Prove rollback or a documented forward-recovery strategy appropriate to the migration; do not require destructive down-migrations merely for symmetry.
+These target/backup/execution/function checks are the repair proof, not an invitation to verify the entire business module. Once they pass, stop. Multiple pending migrations with unclear relevance, unknown target, corruption, unsafe transformation or a failed required check prevent blindly applying this exception; identify the concrete issue and escalate only the affected work.
 
-Historical-data mutation needs a current preview and protected-reference checks. Production execution requires authorization for the target/treatment and appropriate backup/recovery preparation; local test success does not authorize production writes.
+Do not invent an endpoint, database or migration command. A production target is not covered by the local-repair exception: use its authorized deployment/runbook and explicit data safeguards, with proof selected for actual impact. Production execution is not automatically migration authoring, and local success never authorizes production writes.
 
-A migration that passes only against an empty new database cannot establish preservation of existing data. Missing required migration/compatibility proof means NOT GREEN.
+For authoring/changing migrations or repairing damaged historical data, an empty database pass cannot establish preservation of old data. For a known missed local migration, this is not a mandate to create a new historical-data test matrix once the bounded repair proof is sufficient.

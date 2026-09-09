@@ -4,7 +4,7 @@
 
 An adaptive skill for project initialization, design, implementation and verification. Independent design/verification depths; no mandatory test-layer ladder. English skill instructions, Chinese quickstart.
 
-版本：`0.1.0-alpha.9`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
+版本：`0.1.0-alpha.10`（试用版）。默认只安装 `skills/ts-code`，无需其他技能、插件或在线服务。
 
 ## 使用
 
@@ -22,7 +22,7 @@ An adaptive skill for project initialization, design, implementation and verific
 - 只设计：“用 ts-code 只设计跨门店权限，先不实现。”
 - 只测试：“用 ts-code 审查测试覆盖，暂时不写测试或改产品代码。”
 
-PROJECT_INIT/SLICE 决定工作对象；DESIGN_ONLY/VERIFY_ONLY/DELIVERY 决定授权范围。LIGHT/STANDARD/FULL 分别用于设计与验证深度，不能扩大授权。
+FAST_FIX/PROJECT_INIT/SLICE 决定工作对象；DESIGN_ONLY/VERIFY_ONLY/DELIVERY 决定授权范围。LIGHT/STANDARD/FULL 分别用于设计与验证深度，不能扩大授权。
 
 新项目通常先建立一份架构基线；普通切片默认 SPEC.md + RUN.md，小修复可以只在对话中记录。已有项目继续使用现有文档，不强制迁移或重搭工程。
 
@@ -49,14 +49,16 @@ install 遇到已有同名目录会拒绝覆盖；update 先把旧目录归档�
 
 从旧版升级：本版统一使用 `ts-code`；旧名称为 `slice-to-green` 和 `thinslack-code`。先安装新名称，再将旧技能目录移出发现目录；不要同时保留两套活动规则。安装工具不会自动改动旧目录。新版本不再提供 spec-to-design / spec-to-tests。确认主技能安装成功后，可自行归档旧入口；将旧调用改为“ts-code 只设计/只测试”。新技能全部内部引用自包含。
 
-## 明确分流
+## 明确分流与收敛
 
-- 新项目、新业务能力、大功能、架构调整：完整设计与 Slice 规划。
-- 明确的小 Bug：先做 1～2 个信息量最高的诊断，只修直接原因，只验证原故障及直接受影响范围。
-- 不因一次小修创建规划文档、全仓审计、顺手重构或重跑项目规划；已有规划继续有效。
-- 初步诊断无法定位时，说明下一项具体疑点再定向扩查，不能猜修，也不能把全仓扫描包装成一个诊断。
-- 发现数据完整性/历史、安全权限、架构或契约风险后，再进入相应完整分析与验证；复用已有设计和授权，不重复仪式。
-- 验证通过即停止扩大范围；明确的仓库必需检查和用户要求仍须遵守。
+- 新项目、新功能、架构调整：完整设计与 Slice 规划。
+- 明确小 Bug：FAST_FIX 默认 LIGHT/LIGHT，最多 3 个高区分度诊断步骤，找到直接原因即冻结修复范围。未定位则报告具体缺失事实，不继续无限排查、不猜修。
+- 只修直接原因，验证原故障和直接后果；无全仓审计、顺手重构、模块级发布认证或重复规划。
+- 根据新证据可以升档，也可以降档；需要简述证据，不必用户批准降档。仍然真实适用的安全/数据门槛和必需检查不能跳过。
+- 只有诊断证据显示数据损坏/不安全变换、安全边界缺陷或架构/契约变化，才升级相应 Slice 分析；模块关键词和假设风险不触发。
+- 新建/修改面向生产的迁移才适用迁移创作 FULL 门槛。本地补跑已有不变迁移：确认目标与脚本安全性、备份、执行状态、受影响功能恢复；不自动展开整个系统验证。
+- GREEN 只针对本次修复承诺。验收通过即停止探索；不能因附近存在其他模块或旧项目规划而要求全部证明。
+- 此技能不保证修复耗时。3 步约束限制诊断扩张，不允许隐瞒风险、缺失证据或强行宣告成功。
 
 ## 默认确认方式
 

@@ -2,7 +2,7 @@
 
 For DATABASE/CRUD, select proof for the changed constraints, transactions, ownership, nullability, ordering/pagination and rollback behavior. Use isolated real persistence when database semantics determine correctness.
 
-For CORE_DOMAIN, use Design FULL unless an explicit pre-change impact analysis supports retaining lower design depth. Record changed identities/relationships, readers/writers, business invariants, history and compatibility consequences. Lowering an already selected depth still needs user authorization.
+For CORE_DOMAIN, use Design FULL unless an explicit pre-change impact analysis supports retaining lower design depth. Record changed identities/relationships, readers/writers, business invariants, history and compatibility consequences. Evidence may justify lowering a previously selected depth under the recalibration rule in SKILL.md; actual core-model changes still need the appropriate impact analysis.
 
 Historical data mutation, payment/money behavior and public API breaking changes force Verification FULL:
 - Historical data: representative pre-existing records, preserved references/history, intended changes only, repeated application and recovery behavior where applicable. Load migration guidance when data migration is involved.
