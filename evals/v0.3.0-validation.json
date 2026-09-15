@@ -7,10 +7,10 @@
     "python": "3.13.5"
   },
   "unit_tests": {
-    "run": 74,
-    "passed": 74,
+    "run": 75,
+    "passed": 75,
     "failed": 0,
-    "log_sha256": "d8d512566d6a8f4af3df131cc7a166ecad9b076c1f9832e7232183cfed402153"
+    "log_sha256": "70ca46eb457104d0474ff61c6a70845f0e364f94ae98237308394caf89f29045"
   },
   "harness_control": {
     "kind": "HARNESS_SELFTEST_NOT_MODEL_BENCHMARK",
@@ -25,6 +25,7 @@
     "status": "NOT_RUN",
     "reason": "No configured authorized tool-capable model agent in this environment."
   },
-  "runtime_manifest_sha256": "77b67dca3064d199b6ccceeeecbe14e64a5fd8dffd8065c350ab8b78e9c65e7e",
-  "note": "These are tool/selftest results, not model capability or production-safety certification."
+  "runtime_manifest_sha256": "3de7c88f7bcd7030d577a64dc172386d352fa49f2bce6e4aadd790f449bfdb62",
+  "note": "These are tool/selftest results, not model capability or production-safety certification.",
+  "compatibility_fix": "Initial Windows CI exposed legacy-pipe UnicodeEncodeError; CLI output now UTF-8; regression reproduces cp1252."
 }

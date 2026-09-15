@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 import re
+import sys
 import tempfile
 from urllib.parse import quote, unquote, urlsplit
 
@@ -414,6 +415,11 @@ class Project:
 
 
 def main(argv=None):
+    # CLI JSON/text is UTF-8 even when a Windows pipe uses a legacy code page.
+    # Do not change encoding when imported only as a library.
+    for stream in (sys.stdout, sys.stderr):
+        if callable(getattr(stream, 'reconfigure', None)):
+            stream.reconfigure(encoding='utf-8', errors='backslashreplace')
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('action', choices=['doctor', 'sync'])
     p.add_argument('--root', required=True, type=Path)
