@@ -1,13 +1,14 @@
 {
   "skills/ts-code/LICENSE": "55526735ba251779462b49a9815e8b6ee1168c717b244e45573ffe7851aaaadf",
-  "skills/ts-code/SKILL.md": "cf85d88494d4d019bbde4c970eeb91f629524bd03582163c0e6dcdd64daacc8a",
+  "skills/ts-code/SKILL.md": "1bd4bfa591ea15d8839c9bde98e59df06a0184f8f0085de311fb91a5d81b5b27",
   "skills/ts-code/agents/openai.yaml": "1676ce2b5e21e2a47de2b70a550059e596485350c0ad160d1aa49890efc78a44",
   "skills/ts-code/assets/baseline-template.md": "11ad8ee6a726d3d79c1841bafa525586c35aca041d580f19ae9e9836a68dfb7b",
   "skills/ts-code/assets/icon.svg": "1d3f3ea9bb2e58336bf756ea3a2852db4ea651f5586a53a9650e6f893e4c4e04",
-  "skills/ts-code/assets/task-template.md": "109785f302f32aec4f85356aa324d962bcaf48a8c0aba576d369def82e8b1622",
+  "skills/ts-code/assets/project-overview-template.md": "c7db6b86ec3ba02a1ab96005f8a004e9f253a9039d3f69ddf68b312582ef1b08",
+  "skills/ts-code/assets/task-template.md": "573338e6229a17b8bfe9445805325fb7587b55350ad797ae9762823583f23713",
   "skills/ts-code/references/clarify.md": "3ff5d15c90eda918c2f85e42c12c114e96d73c378324e3e735fe48a6c40cff42",
   "skills/ts-code/references/guided.md": "ba44cd3e8dfa114a9e9b938e830912f8b53a5e78451ffe0afd3b20dff066cbc3",
-  "skills/ts-code/references/memory.md": "b2daae88c38267f15548e838e3d2a55d9acc8845d403371ffaefa99ad90a5aa3",
+  "skills/ts-code/references/memory.md": "9eb057b87ddf3ee914321665bd078b4aae2b8d37baee97510db7cc5112a6a983",
   "skills/ts-code/references/risk-proof.md": "ca3cf5b3c5adb9e28f4042557461404f87d9a5d45a9f2844eb4736b8ed43d597",
   "skills/ts-code/references/tdd.md": "004cdacf26f50230b8b6ca157a8eb3af38845f2a07ab49465416126f9d17a42e",
   "skills/ts-code/scripts/check_evidence.py": "201f915e511678961eb357b5791f303d7aef93d94ca3c70090a3ae535b56e9bc"
