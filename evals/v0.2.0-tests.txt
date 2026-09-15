@@ -1,0 +1,33 @@
+test_install_refuses_overwrite_and_preserves_unrelated (test_manage.ManagementTests.test_install_refuses_overwrite_and_preserves_unrelated) ... ok
+test_invalid_source_does_not_touch_existing_install (test_manage.ManagementTests.test_invalid_source_does_not_touch_existing_install) ... ok
+test_uninstall_archives_and_retains_others (test_manage.ManagementTests.test_uninstall_archives_and_retains_others) ... ok
+test_update_preserves_prior_files_outside_discovery_root (test_manage.ManagementTests.test_update_preserves_prior_files_outside_discovery_root) ... ok
+test_update_rejects_unrelated_target (test_manage.ManagementTests.test_update_rejects_unrelated_target) ... ok
+test_artifact_change_invalidates_record (test_v020.EvidenceTests.test_artifact_change_invalidates_record) ... ok
+test_blocked_record_is_not_green (test_v020.EvidenceTests.test_blocked_record_is_not_green) ... ok
+test_cli_returns_nonzero_on_bad_record (test_v020.EvidenceTests.test_cli_returns_nonzero_on_bad_record) ... ok
+test_failed_check (test_v020.EvidenceTests.test_failed_check) ... ok
+test_missing_artifact (test_v020.EvidenceTests.test_missing_artifact) ... ok
+test_no_empty_green (test_v020.EvidenceTests.test_no_empty_green) ... ok
+test_path_traversal_rejected (test_v020.EvidenceTests.test_path_traversal_rejected) ... ok
+test_skipped_check (test_v020.EvidenceTests.test_skipped_check) ... ok
+test_source_change_invalidates_record (test_v020.EvidenceTests.test_source_change_invalidates_record) ... ok
+test_symlink_evidence_rejected (test_v020.EvidenceTests.test_symlink_evidence_rejected) ... ok
+test_uncovered_acceptance (test_v020.EvidenceTests.test_uncovered_acceptance) ... ok
+test_unknown_criterion (test_v020.EvidenceTests.test_unknown_criterion) ... ok
+test_unresolved_high_risk (test_v020.EvidenceTests.test_unresolved_high_risk) ... ok
+test_valid_record (test_v020.EvidenceTests.test_valid_record) ... ok
+test_wrong_field_types (test_v020.EvidenceTests.test_wrong_field_types) ... ok
+test_actual_v020_install_update_uninstall (test_v020.PackageTests.test_actual_v020_install_update_uninstall) ... ok
+test_broken_link (test_v020.PackageTests.test_broken_link) ... ok
+test_checksum_tampering (test_v020.PackageTests.test_checksum_tampering) ... ok
+test_current_package (test_v020.PackageTests.test_current_package) ... ok
+test_extra_runtime_file (test_v020.PackageTests.test_extra_runtime_file) ... ok
+test_malformed_frontmatter (test_v020.PackageTests.test_malformed_frontmatter) ... ok
+test_missing_runtime_file (test_v020.PackageTests.test_missing_runtime_file) ... ok
+test_version_mismatch (test_v020.PackageTests.test_version_mismatch) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 0.700s
+
+OK

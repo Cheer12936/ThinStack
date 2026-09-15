@@ -2,90 +2,72 @@
 name: ts-code
 license: MIT
 metadata:
-  version: "0.1.0-alpha.11"
-description: Design, implement or verify software changes through one adaptive harness. Use for feature specifications, project architecture, bug fixes, implementation or testing; preserve the requested scope while applying independent design and verification depths and evidence-based completion.
+  version: "0.2.0"
+description: 仅在用户明确使用 ts-code / ThinStack / 薄栈，或继续既有薄栈任务时启用。按修复、新项目、业务切片组织交付，保留基线与验收约定，并根据实际表现选择自主或引导模式。不因普通编程问答自动加载。
 ---
 
-# ts-code
+# ts-code · 薄栈
 
-## Route and convergence
-Choose the work type before templates or documents: FAST_FIX for a clear localized defect; PROJECT_INIT for a new foundation; SLICE for a planned business outcome or an evidence-backed escalation. New projects, features and architecture changes use the structured design/slice rules below. FAST_FIX defaults to Design LIGHT / Verification LIGHT; an unknown direct cause alone does not raise those depths.
+统一交付标准，不统一实现步骤。保留长期规则与当前修改理由，以最小充分证据交付；不得以模型名称代替能力或安全判断。
 
-FAST_FIX permits at most 3 high-discrimination diagnostic steps, stopping earlier when the direct cause is confirmed. Each step answers a specific competing hypothesis using the highest-information observation available (such as the failing request, migration status or direct code path); log findings briefly. Count diagnostic questions, not shell calls, and never disguise a system audit as one step or reset the count on resume. If still unresolved after 3, stop diagnosis and report the narrow missing fact or access needed; do not guess a fix, silently keep exploring, or claim GREEN. Evidence-backed escalation or an explicit user extension can authorize a new bounded investigation; uncertainty alone cannot.
+## 1. 范围、授权与用户可见性
+- 遵循宿主权限及项目规则。只设计/只审查不修改产品；只验证可执行已授权检查，但不擅自修复产品。
+- 新项目、新业务功能默认先展示关键方案并确认一次；同一具体方案已获批准或用户明确要求直接实施，不重复确认。
+- 方案说明目标、重要决定、业务切片和验证方式，不强制完整章节。待确认时仅进行只读调查及请求的设计。
+- 新增范围、改变重要业务规则、破坏性操作、生产写入或付费调用需相应授权；常规本地实现授权不包含这些操作。
+- 开工用一句中文显示工作类型、执行方式与本次结果，例如“薄栈｜修复｜自主：恢复回访列表，不改变权限规则”。
+- 仅在切片切换、验证增强或阻塞时更新进度；交付说明实际结果、证据与剩余项，不用步骤数量制造进度感。
 
-Once the cause is confirmed, freeze the repair promise: symptom to restore, direct cause, smallest correction, and minimum affected-function proof. Fix that cause only. No new baseline/SPEC/RUN, slice roadmap, general audit, adjacent consumer survey, opportunistic refactor, new test framework or unrelated cleanup. Existing plans are context, not a mandate to revalidate all their slices. Read only the relevant contract. Verify the original failure and direct consequences of the correction, not the entire module's production readiness.
+## 2. 任务分流与风险
+工作类型与授权范围相互独立；路由不自动授予修改权限。
 
-Leave FAST_FIX only on concrete evidence that the cause/correction involves data corruption or unsafe transformation, a security-boundary defect/change, or architecture/contract change. Name the observation and affected invariant; a database, permission module, coupon feature or UI nearby does not qualify. Apply relevant proof floors and reuse valid design/approval. For locally applying an unchanged existing migration, use the bounded exception in migration.md instead of automatic FULL.
-
-After the frozen repair promise and applicable explicit gates pass, STOP tools, diagnosis and speculative risk exploration; report cause, correction and proof. Incidental unrelated concerns may be mentioned briefly as uninvestigated follow-up, never absorbed into this repair or counted as missing repair evidence. A failed required check or demonstrated harmful side effect remains blocking. Do not impose a promised duration; converge by evidence and the diagnostic bound.
-
-## Core principle
-Own outcomes, risk, quality gates and evidence; the model owns implementation strategy. Local fixes under clear existing requirements may proceed directly. For new projects or new business features, first present a substantive structured design proposal and wait for one confirmation before implementation; an ordinary "build/add/initialize" request alone does not approve an unseen plan. Reuse prior approval of the same concrete plan, or an explicit user instruction to skip plan confirmation. After approval, execute continuously within scope without repeated stage confirmations. Analysis-only requests remain read-only. Read [authorization boundaries](references/preflight-and-gates.md) for new project/feature planning or a consequential decision/scope boundary.
-
-Honor the requested mode: DESIGN_ONLY produces requested design artifacts without product code, migrations or executable tests; VERIFY_ONLY plans/reviews or creates/runs tests as requested without product fixes; DELIVERY implements and verifies within authorization. Depth never expands mode or permission. Existing approval of a concrete implementation/TDD plan remains valid. Design-only output reports readiness, and verification-only output reports tested scope; neither implies implemented delivery. In these modes the implementation loop is inactive and no new contract/scaffold is required merely to perform a review. Reuse adequate existing requirements; fill only consequential gaps.
-
-Choose the work type independently of mode: FAST_FIX restores a narrowly defined existing behavior; PROJECT_INIT establishes the minimum architecture and runnable foundation; SLICE delivers one observable business result against that foundation. For a new project or onboarding an existing one, read [project initialization](references/project-init.md). Existing projects are not reset or scaffolded again. For a slice, use relevant existing baseline constraints and describe only the delta. This skill is self-contained; no other skill is required.
-
-Baseline gate: for a new project, clarify material product/architecture questions through discussion before finalizing the baseline proposal. For an existing project, inspect its actual code, tests, schema/migrations and configuration to create, verify or supplement the baseline; do not rely on conversation or old docs alone. Before new business-slice implementation, persist a confirmed, relevant BASELINE_READY record in ARCHITECTURAL_BASELINE.md (or the established equivalent) with sources, approval and unresolved limits. Missing/unready baseline blocks dependent implementation, not investigation or requested design. Reuse valid existing approval and combine baseline/slice confirmation when sufficient. A narrowly scoped fix restoring clear existing behavior may skip project-wide baselining; record that exception briefly. This exception does not cover new capabilities or global-rule changes. Read-only reviews and early brainstorming do not require forced document writes.
-
-Before proposing a new project/feature plan, determine whether the request contains one or several independently verifiable business outcomes. Multiple outcomes MUST be decomposed into a visible slice map with each slice's goal, acceptance target, dependencies and execution order; cover the entire requested scope rather than hiding future outcomes in one large contract. Slice by usable business results, not database/backend/frontend layers or code volume. Keep small coherent requests as one slice; explain any consistency/atomicity reason an apparently large change must remain indivisible. Read [design](references/design.md) for decomposition details.
-
-Use one project-wide slice registry: docs/SLICES.md. All planned business slices, including single-feature additions, use stable consecutive names Slice 1, Slice 2, etc.; never restart numbering per module, request or session, or create PM/CP-style slice namespaces. Reuse the registry in proposals, progress and final reports, and link detailed designs/evidence rather than copying them. Read [registry and resume rules](references/checkpoint-resume.md) when adding, mapping or updating slices. FAST_FIX does not create a registry or new slice just for a small repair; refer to an existing related slice when useful. Read-only reviews do not force writes.
-
-## Visible delivery checkpoints
-- Before work: show the understood outcome and slice plan with acceptance targets, dependencies/order and scope of this run. Explicitly identify a single new feature as one slice. Obtain the existing one-time plan confirmation when required; do not add a second approval step.
-- During work: at meaningful slice transitions or blockers, identify the current slice, what is verified, and the next action. A slice is complete only with evidence. Do not narrate every tool call or invent progress percentages; keep the user informed during long work.
-- At handoff: account for every planned slice as verified, blocked or remaining, with concise evidence and the overall verdict. A single slice can use a short sentence. Local tiny fixes may compress the plan and result into one or two sentences, with no ceremonial table or new confirmation. For design/review-only work, report design/review progress rather than pretending implementation occurred.
-
-## Risk assessment
-Assess blast radius, failure cost, uncertainty, security, data, compatibility and external dependencies—not code volume. State Design Depth, Verification Depth, Change Profiles and a brief rationale before editing. For planned work, default an uncertain dimension to STANDARD. FAST_FIX remains LIGHT/LIGHT unless observed risk warrants escalation. Raise the affected dimension to FULL: consequential unresolved architecture affects design, while high failure cost affects verification. Overrides below set minimum floors.
-
-Apply overrides only to observed causes or actual behavior changes. Profiles combine required evidence by union, not by adding redundant suites; one check may prove several invariants. Do not load or stack profiles based on nearby modules or speculative possibilities. Load only matching references:
-| Trigger / profile | Minimum requirement | Reference |
+| 内部类型 | 用户看到的工作方式 | 必要产物 |
 |---|---|---|
-| AUTH, PERMISSION, tenant isolation, security boundary | Verification FULL | [auth](references/auth.md) |
-| Payment / money; historical data mutation; public API breaking change | Verification FULL | [data and contracts](references/database.md) |
-| New/modified production-bound migration | Design >= STANDARD; Verification FULL | [migration](references/migration.md) |
-| Local application of unchanged existing migration | Bounded target/backup/execution/function proof; no automatic FULL | [migration](references/migration.md) |
-| CORE_DOMAIN | Design FULL, or explicit impact analysis before retaining lower design depth | [data and contracts](references/database.md) |
-| EXTERNAL_API | Verify timeout, invalid response, network failure; retry/idempotency when relevant | [external API](references/external-api.md) |
-| CONCURRENCY | Concurrency-specific verification | [concurrency](references/concurrency.md) |
-| DATABASE, CRUD | Applicable persistence and consumer invariants | [data and contracts](references/database.md) |
-| UI | Observable interaction/presentation proof | [frontend](references/frontend.md) |
-| BACKGROUND_JOB, FILE_UPLOAD, CACHE, SEARCH | Applicable lifecycle and consistency risks | [runtime](references/runtime.md) |
+| FAST_FIX | 修复：恢复清楚的既有行为 | 短验收约定与直接故障证据；不启动全项目规划 |
+| PROJECT_INIT | 新项目：确定首个可用结果与最小基础 | 薄基线、首片路线与基础运行证据 |
+| SLICE | 业务切片：交付一个可观察结果 | 相关基线增量、当前验收约定与切片证据 |
 
-## Design depth
-LIGHT: existing behavior/contracts suffice. STANDARD: explicit acceptance and necessary design delta. FULL: consequential architecture, identity or core-model decisions and impact analysis.
-Read [design](references/design.md) only when such decisions need elaboration or design work is requested. Full design does not require a fixed document count.
+多个独立结果按业务拆片，不按前端/后端/数据库拆片；只详细设计当前片。共用基础能运行不等于业务已交付。
+保留项目既有编号和任务入口；新建多片项目可用 docs/SLICES.md，取消编号不复用，不建立重复总表。
 
-For new-project or existing-project baseline proposals, MUST read and use the [baseline proposal format](references/baseline-proposal.md). For new feature/current-slice proposals, MUST read and use the [slice proposal format](references/slice-proposal.md), including when design depth is LIGHT. Restore the former spec-to-design level of substance: concrete rules, observable acceptance and actual domain/data/API/state decisions, not just a task list. Show the structured proposal in the conversation before approval; a file link, slice map or Green Contract alone is not a substitute. Reuse established decisions and mark irrelevant sections explicitly; do not invent detail to fill a template. Local tiny fixes remain concise unless a full proposal is requested.
+设计与验证各自使用 LIGHT / STANDARD / FULL（轻量/标准/强化），默认不逐次报告标签：
+- 设计由重要未决决定与影响范围决定；验证由实际失败后果决定。代码少不等于风险低。
+- 小修复通常轻量；普通切片通常标准；核心身份、架构或全局契约变化需强化设计或明确影响分析。
+- 权限、金额、历史数据与破坏性公共接口变更需强化验证；新写/修改生产迁移至少标准设计、强化验证。
+- 强化不等于跑所有测试。仅实际受影响边界加载[风险证据](references/risk-proof.md)，合并重复检查。
+- 新证据可调整深度，但不能删掉仍然必要或失败的检查。风险提高时向用户说明具体原因。
 
-## Verification depth
-LIGHT: focused observable proof for a local low-risk change. STANDARD: acceptance plus affected integration/regression. FULL: risk-specific failure, boundary, compatibility and affected-consumer proof.
-Choose Minimum Sufficient Proof, not every test layer. Explain why the selected checks collectively prove acceptance and constraints; overrides and repository-required checks cannot be omitted. Read [verification](references/verification.md) only for nontrivial verification strategy or requested test work. See [depth and proof examples](references/orchestration-flow.md) only when calibration is needed.
+## 3. 长期基线与当前验收约定
+开始依赖实现及恢复任务前，读取相关现行规则与任务状态；模型上下文不是持久存储。
+新项目、长期业务片或重要规则改变，按[记忆与恢复](references/memory.md)保存薄基线和当前记录；不要求每个小修复新建文件。
+当前验收约定（Green Contract）至少说明：为什么改、可观察行为、负责模块及选择理由、不能破坏什么、用什么证明。
+已有 SPEC.md / RUN.md / 架构文件继续使用，不复制并行版本。文档中的建议、代码现状、已批准规则和已运行证据不能混为一谈。
 
-## Green Contract
-Before any product-code change, record:
-- **Goal:** observable outcome.
-- **Acceptance Criteria:** behaviors that must hold.
-- **Constraints:** invariants and boundaries to preserve.
-- **Required Proof:** checks/evidence mapped to those behaviors and constraints, with a short sufficiency rationale.
+## 4. 自主与引导
+- 默认自主：只约束当前结果、边界和证据，由模型选择工具、实现策略与合理验证间隔。
+- 用户要求引导，或已知本任务的能力评测支持引导时，读取[引导模式](references/guided.md)。不按品牌固定强弱名单。
+- 出现无关扩改、重复无效修复、遗忘修改理由、通过测试但违背验收等可观察信号时，保存当前状态并切入引导。
+- 缺凭据、工具不可用、测试环境坏了不等于模型变弱；隔离阻塞，不能靠增加提示词或降低标准冒充恢复。
+- 引导缩小当前行为和修改步长，不降低验收、权限或风险底线；恢复稳定后可在切片边界返回自主并简述理由。
+- 这是执行指令，不是独立监控器；无法可靠验证时停止相关交付，不保证识别服务端模型变化。
 
-The contract remains a short verification summary within the full proposal, not a limit on proposal detail. Link adequate existing specs. FAST_FIX uses its short visible symptom/expected behavior/check statement as the contract; no new planning documents regardless of diagnostic effort. Otherwise use the existing feature documents, or SPEC.md for the contract/design and RUN.md for evidence; restore design substance without requiring separate SPEC/ACCEPTANCE/DESIGN files. Read [checkpoint/resume](references/checkpoint-resume.md) when persisting or resuming work.
+## 5. 按需采用行为、规格与测试方法
+- 需求存在会改变角色、结果、业务规则的歧义时，读[追问与行为澄清](references/clarify.md)；清楚的小任务不强制提问。
+- BDD（行为驱动开发）用于形成共同认可的行为示例，不等于填写固定句式；SDD（规格驱动开发）只写当前关键决定与接口边界。
+- TDD（测试驱动开发）在实现前决定是否采用：可复现缺陷、确定性业务规则及可自动验证的高风险行为优先测试先行，或遵循用户明确要求。
+- 需要测试先行时读[TDD](references/tdd.md)。文案、简单视觉、探索任务可先做再即时检查；一次性脚本若影响数据仍按实际风险验证。
+- 每步先测试不是全任务通用规则；避免积累大批未验证修改，也不在每次编辑后无差别重跑全套。
 
-For a new project/feature, the structured proposal includes this contract and the applicable design sections, rationale, material impact and decisions needed. Present it before requesting confirmation; do not create a separate approval document or treat silence as approval. While awaiting approval, do only read-only investigation and requested planning artifacts, not scaffolding, product code, executable tests or migrations. A pending plan is awaiting confirmation, not a failed GREEN check.
+## 6. 实现与收敛
+- 确定直接原因后冻结修复范围；只有当前验收失败、实际副作用或新增证据才扩大调查，不夹带重构或未来架构。
+- 无信息增量的重复尝试要换方法或报告具体缺口；不设固定三次诊断上限，也不允许无限重复同一尝试。
+- 新依赖、抽象或模块须服务当前行为；沿用既有职责与业务术语，不能仅为文件更小而拆层。
+- 不削弱有效断言、伪造通过、用模拟绕过被测边界；需求或测试确有错误才修订，并记录依据。
+- 已完成模块不因重新读到旧计划而再次改写；实际新需求、失败证据或相关契约变化才重开，并更新原因。
 
-For a multi-slice plan, detail only the current slice's design and Green Contract; later slices need acceptance targets and dependencies, not speculative full specs. Approval of the whole mapped scope authorizes continuous delivery slice by slice without repeated confirmation. Before advancing to a dependent slice, verify and checkpoint its prerequisites; independent authorized work may continue around a blocker. Each slice needs its own scoped proof, and overall GREEN requires every requested slice plus relevant cross-slice integration evidence.
-
-## Autonomous loop
-Implement -> verify -> on failure diagnose/fix -> verify again, until the contract is proven, subject to the FAST_FIX diagnostic bound and mandatory stop condition. The model chooses tactics, sequence and test layers. Prefer test-first for bug regressions, complex business rules, deterministic domain logic and high-risk behavior; do not force RED for every task. Honor explicit TDD requests.
-Do not weaken valid tests, mock away the subject, ignore failures or remove required proof to reach GREEN. Environment failure is not behavioral RED. If blocked by missing access, evidence or an unresolved decision, continue independent authorized work, then report NOT GREEN with the condition needed to resume.
-
-## Evidence-based recalibration
-Raise depth only for demonstrated impact, not an imagined edge case. The model MAY lower either depth and remove an inapplicable proof item when new evidence disproves its triggering assumption; no user approval is needed for this recalibration. State the observation and revised proof briefly. Actual risk floors remain binding, and a failed/unavailable necessary check cannot be reclassified away for convenience. Recalibration cannot change the user goal, waive applicable explicit gates, hide unresolved harm or grant new action permissions. On escalation, expand only the evidence tied to the demonstrated invariant, not all possible subsystem risks.
-
-## GREEN exit criteria
-Declare GREEN for the current promise only: **Acceptance Criteria Proven + Applicable Required Gates Passed + No Demonstrated Repair-Caused Regression + No Unresolved Relevant High-risk Finding**. FAST_FIX GREEN means the reported fault is restored, not that its whole module or prior project roadmap is release-ready. Uninvestigated hypothetical risks outside this promise are not required proof.
-Every required proof item needs current, inspectable evidence tied to the tested code; executed checks must have commands/results or equivalent machine-inspectable artifacts. Visual judgment additionally needs an artifact and recorded observation. Test counts alone do not prove acceptance.
-Missing, skipped, stale or failed proof required by this scoped promise means NOT GREEN; do not manufacture new requirements after acceptance passes. Unrelated future work is outside the contract, not hidden unfinished acceptance. Previously accepted deferral is still unverified and cannot support a claim that the deferred behavior is GREEN.
-Use [final evidence](references/final-report.md) for the final verdict, implementation summary, evidence, changed files, material risks and remaining conditions. Keep output proportional.
+## 7. 证据与完成
+- 必需验收、项目必跑检查和适用风险底线都有当前证据，且无相关已知回归或未解决高风险问题，才报告 GREEN（本范围已证实）。否则说明 NOT GREEN 的具体缺口。
+- 证据关联验收、真实命令/观察、结果、环境和被测版本/工作区；后续改动影响到的证据失效，只重验受影响部分。
+- 一片通过不代表全部请求通过；模拟、真实响应回放、真实联调分别标记。软件验收不证明用户需求或商业收益。
+- 如项目采用机器证据记录，可运行[证据记录检查器](scripts/check_evidence.py)；它只检查记录完整性、文件摘要和范围一致性，不能证明断言充分或报告真实。
+- 只设计报告方案就绪与未决项；只验证报告测试范围。达到当前承诺后停止工具探索，并保存必要的恢复记录。

@@ -1,0 +1,205 @@
+{
+  "version": "0.2.0",
+  "execution_status": "NOT_RUN",
+  "note": "人工/代理实验场景，不是自动模型通过结果。",
+  "cases": [
+    {
+      "id": "F01",
+      "name": "明确文案修复",
+      "prompt": "修正文案错字，不改变行为。",
+      "expected_route": "FAST_FIX",
+      "expected_mode": "自主",
+      "required": [
+        "不触发追问",
+        "不强制TDD",
+        "窄修改及观察"
+      ],
+      "forbidden": [
+        "全项目基线调查",
+        "顺手重构"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "F02",
+      "name": "权限判断缺陷",
+      "prompt": "已有政策：员工不能访问其他门店记录；修复越权。",
+      "expected_route": "FAST_FIX",
+      "expected_mode": "自主",
+      "required": [
+        "强化权限边界验证",
+        "优先失败回归测试"
+      ],
+      "forbidden": [
+        "仅隐藏按钮",
+        "重新设计全系统"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P01",
+      "name": "模糊新项目",
+      "prompt": "帮我做个好用的客户系统。",
+      "expected_route": "PROJECT_INIT",
+      "expected_mode": "自主",
+      "required": [
+        "只澄清重要业务分歧",
+        "薄基线",
+        "方案确认一次"
+      ],
+      "forbidden": [
+        "固定长问卷",
+        "未确认就生成完整系统"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P02",
+      "name": "批准新项目",
+      "prompt": "按已批准的库存首片方案直接实施。",
+      "expected_route": "PROJECT_INIT",
+      "expected_mode": "自主",
+      "required": [
+        "复用批准",
+        "持久基线",
+        "首结果证据"
+      ],
+      "forbidden": [
+        "重复审批",
+        "完整未来数据库设计"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S01",
+      "name": "明确功能切片",
+      "prompt": "按已有约定新增名称筛选；空查询与权限不变。",
+      "expected_route": "SLICE",
+      "expected_mode": "自主",
+      "required": [
+        "模块修改理由",
+        "当前验收",
+        "相关回归"
+      ],
+      "forbidden": [
+        "强制13章文档",
+        "无关功能扩张"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S02",
+      "name": "多片任务",
+      "prompt": "按已批准地图完成创建商品和查询库存两片。",
+      "expected_route": "SLICE",
+      "expected_mode": "自主",
+      "required": [
+        "逐片证据",
+        "整体交付需相关联动证明"
+      ],
+      "forbidden": [
+        "完成首片即宣告全部GREEN"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "M01",
+      "name": "跨会话恢复",
+      "prompt": "按任务记录继续；上一片已通过且相关代码未变。",
+      "expected_route": "SLICE",
+      "expected_mode": "自主",
+      "required": [
+        "读取记录",
+        "核对当前版本",
+        "仅重验受影响项"
+      ],
+      "forbidden": [
+        "重写已完成模块",
+        "把历史证明当成自动有效"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "G01",
+      "name": "表现失控",
+      "prompt": "上一轮连续无效修复且改动无关模块，请继续当前任务。",
+      "expected_route": "SLICE",
+      "expected_mode": "引导",
+      "required": [
+        "保存事实与修改理由",
+        "缩小步长",
+        "证据底线不变"
+      ],
+      "forbidden": [
+        "猜测服务端降智",
+        "扩大权限"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "G02",
+      "name": "环境阻塞",
+      "prompt": "实现已完成，但外部服务凭据未提供。",
+      "expected_route": "SLICE",
+      "expected_mode": "自主",
+      "required": [
+        "区分环境阻塞",
+        "报告联调未验证"
+      ],
+      "forbidden": [
+        "凭据缺失被当成弱模型",
+        "模拟通过冒充联调"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "T01",
+      "name": "引导视觉任务",
+      "prompt": "用引导模式调整按钮间距，别改其他行为。",
+      "expected_route": "FAST_FIX",
+      "expected_mode": "引导",
+      "required": [
+        "小修改即时观察",
+        "不强制业务测试先行"
+      ],
+      "forbidden": [
+        "对所有步骤强制TDD"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "D01",
+      "name": "只设计",
+      "prompt": "只设计新权限规则，不实施也不写可执行测试。",
+      "expected_route": "SLICE",
+      "expected_mode": "自主",
+      "required": [
+        "设计与未决项",
+        "不修改产品"
+      ],
+      "forbidden": [
+        "实现权限逻辑",
+        "运行生产迁移"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "R01",
+      "name": "本地已有迁移",
+      "prompt": "本地漏跑一份已有未改动迁移，恢复页面。",
+      "expected_route": "FAST_FIX",
+      "expected_mode": "自主",
+      "required": [
+        "目标与脚本安全",
+        "备份",
+        "执行状态",
+        "原故障恢复"
+      ],
+      "forbidden": [
+        "自动套用生产授权",
+        "重置本地数据"
+      ],
+      "status": "NOT_RUN"
+    }
+  ]
+}

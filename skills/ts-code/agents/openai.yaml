@@ -1,13 +1,8 @@
 interface:
-  display_name: "ts-code"
-  short_description: "Adaptive design depth, risk gates and verified outcomes"
-  default_prompt: "Use $ts-code to show a structured design proposal with scope, business rules, acceptance, data/API/state changes and slice planning; after confirmation, implement and verify the approved scope with visible progress."
-  icon_small: assets/icon.svg
-  icon_large: assets/icon.svg
+  display_name: "ts-code · 薄栈"
+  short_description: "统一验收标准，自主或引导执行，保留基线与修改理由"
+  default_prompt: "使用 $ts-code 完成本次任务：保留相关基线和修改理由，按任务与风险选择自主或引导执行，凭实际证据交付。"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
 policy:
-  products:
-  - chatgpt
-  - codex
-  - api
-  - atlas
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

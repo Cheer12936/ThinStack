@@ -1,32 +1,16 @@
-# Alpha evaluation evidence
+# ThinStack 评估
 
-Date: 2026-09-08. Environment: Windows, PowerShell, Python 3.12.5; browser demo used cached Playwright CLI and installed Chrome. Independent agents were explicitly assigned narrow isolated tasks; these evaluations do not make delegation a requirement of the distributed skill.
+## v0.2.0
 
-## Actual execution
+[本版验证记录](v0.2.0-validation.md)仅报告实际运行的包校验、安装回归和证据检查器测试。它不是模型能力对照。
+[场景集](scenarios-v0.2.0.json)提供实际代理评测任务；本次未执行模型实验，所有场景保持 NOT_RUN。
 
-| Task | Selected design / verification | Evidence and result |
-|---|---|---|
-| Notes.create with SQLite persistence | LIGHT / STANDARD | 4 unittest methods pass; input preservation, invalid-input nonmutation, committed cross-instance read and order. [Report](../examples/business/REPORT.md) |
-| Permission predicate repair | LIGHT / FULL | 4 unittest methods pass including a 16-combination permission matrix; [report](../examples/permission/REPORT.md) |
-| Button horizontal padding | LIGHT / LIGHT | Desktop/mobile browser style and overflow checks, click behavior, rendered screenshots. [Report](../examples/ui/REPORT.md) |
-| Missing supplier credentials/schema | STANDARD / STANDARD review | No supplier tests executed; correctly reports real integration NOT GREEN. [Assessment](../examples/permission/EXTERNAL_ASSESSMENT.md) |
+对照时保持代码起点、项目指令、工具权限、模型配置和预先确定的验收相同，分别运行：不加载技能、旧版、v0.2.0 自主、v0.2.0 引导。每题多次运行，保存原始工具轨迹、实际改动、Token、耗时、询问次数、验收失败与越权/虚报完成。
 
-The permission demo has only a pure-function boundary. FULL verification covers that demo's risks; this does not establish real HTTP/session authorization safety. The business demo has SQLite, not PostgreSQL or an ERP. The UI is a synthetic static page. Missing external conditions were assessed on provided files, not live integration.
+检查由预先确定的验收及独立测试提供，不让执行代理只凭自己的总结判定通过。对能力下降做明确模拟（缺失上下文、工具反馈问题、错误历史修改），不要据此宣称检测到了真实服务端降级。
 
-The main agent independently reran both Python example suites successfully. Package management has five separate executable tests, covering update/uninstall preservation and refusal of unintended overwrite. See [release validation](RELEASE_VALIDATION.md).
+## 历史材料
 
-## Reproduce
-
-From each relevant example directory:
-- business: python -B -m unittest discover -v
-- permission: python -B -m unittest discover -v
-- ui: serve index.html on localhost and inspect its page in a browser; recorded operations and screenshots are included. No browser package is installed by this repository.
-- external: static incomplete fixture; no endpoint or credentials are supplied, and no live PASS is claimed.
-
-These are completed demonstration artifacts, not an automated independent benchmark. Historical red logs are sanitized snapshots; final tests against completed code should pass. Personal absolute paths in published reports/logs are replaced; no temporary databases or real business records are included. Some earlier decision-only scenarios resembled skill examples and are not counted here as executable tests.
-
-## Limits and next work
-
-No claims of cross-model accuracy, fixed success rate, production safety, CI execution, or Linux/macOS host compatibility. Initial project bootstrapping has documented guidance but was not independently exercised end-to-end in this alpha evaluation. The GitHub matrix is supplied for future runs, not reported as already passed.
-
-Historical business RED logs contain localized Windows error text with unreadable glyphs from the original console capture; error types and final fresh PASS logs remain available. Sanitized logs are supporting evidence, not exact raw-byte originals.
+2026-09-08 的 alpha 演示保留在 examples，旧评估文件保留历史日期与当时规则：它们不证明新版本、生产系统或新模型已通过。
+旧运行示例涵盖 SQLite 业务行为、纯函数权限、静态页面和缺失外部条件；不是完整 ERP、真实身份会话或供应商联调。
+旧 FAST_FIX 三步政策、强制完整方案、基线状态和统一编号的静态审查已经被 v0.2.0 政策取代，不作为当前执行要求。
