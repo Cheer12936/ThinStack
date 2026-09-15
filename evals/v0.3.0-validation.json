@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "release": "0.3.0",
+  "base_commit": "2d6f7bbff3293c1baf04c440362cd04b00cc5c21",
+  "environment": {
+    "os": "Linux",
+    "python": "3.13.5"
+  },
+  "unit_tests": {
+    "run": 74,
+    "passed": 74,
+    "failed": 0,
+    "log_sha256": "d8d512566d6a8f4af3df131cc7a166ecad9b076c1f9832e7232183cfed402153"
+  },
+  "harness_control": {
+    "kind": "HARNESS_SELFTEST_NOT_MODEL_BENCHMARK",
+    "pass": true,
+    "positive_trials": 54,
+    "negative_trials": 54,
+    "real_model_runs": 0
+  },
+  "real_toy_tests": 3,
+  "real_model_comparison": {
+    "runs": 0,
+    "status": "NOT_RUN",
+    "reason": "No configured authorized tool-capable model agent in this environment."
+  },
+  "runtime_manifest_sha256": "77b67dca3064d199b6ccceeeecbe14e64a5fd8dffd8065c350ab8b78e9c65e7e",
+  "note": "These are tool/selftest results, not model capability or production-safety certification."
+}

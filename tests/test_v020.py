@@ -129,7 +129,7 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(validator.validate(self.root), [])
 
     def test_version_mismatch(self):
-        (self.root / "VERSION").write_text("0.3.0\n")
+        (self.root / "VERSION").write_text("99.0.0\n")
         self.assertTrue(validator.validate(self.root))
 
     def test_checksum_tampering(self):
