@@ -5,7 +5,7 @@
 
 ThinStack 是一个面向 AI 软件开发的轻量交付方法与 `ts-code` Skill。它不要求模型机械执行一套大而全的流程，而是围绕当前业务结果，按需使用需求澄清、项目记忆、TDD、风险验证与机器一致性检查，让 AI **更快交付、少做无关工作、能跨会话继续，并且知道凭什么算完成**。
 
-当前版本：**v0.3.1**
+当前版本：**v0.3.2**
 
 ## 从“薄肌”到“薄栈”
 
@@ -105,11 +105,12 @@ ThinStack 不把模型上下文当持久存储。
 
 ## 按信号加载，而不是全量加载
 
-`ts-code` 只有一个核心 Skill，五份 Reference 按需使用：
+`ts-code` 只有一个核心 Skill，六份 Reference 按需使用：
 
 | 信号 | 加载 |
 |---|---|
 | 新项目、正式切片、重要规则变化、恢复 | `memory.md` |
+| 新项目、新业务功能或架构调整的可见方案 | `proposal.md` |
 | 业务/技术歧义会改变产品、架构或高代价决定 | `clarify.md` |
 | 已决定采用测试先行 | `tdd.md` |
 | 权限、金额、数据、迁移、外部服务、并发等真实风险 | `risk-proof.md` 相关部分 |
@@ -160,6 +161,8 @@ $ts-code 只设计下一可执行 Slice，不修改产品代码。
 $ts-code 建立项目总览和永久切片档案，本次只建档。
 ```
 
+初始化前两轮后做信息检查点，而非强制结束。关键未知仍有新事实时可以继续追问；没有新事实则输出条件方案，未决高代价决定继续阻止依赖实现。
+
 新项目 / 新业务默认展示一次关键方案并确认；同一具体范围已批准或用户明确要求直接实施时，不重复确认。设计、只读、验证、实施、生产写入和部署是不同授权。
 
 ## 可选：把“纪律”变成机器检查
@@ -182,6 +185,8 @@ python skills/ts-code/scripts/project_state.py sync --root "项目目录" --writ
 # 要求某个 Slice 当前具备有效验证记录
 python skills/ts-code/scripts/project_state.py doctor --root "项目目录" --require-verified S-001
 ```
+
+v0.3.2 登记时先保护旧入口并沿用明确的编号/目录；歧义时要求显式指定，不按项目大小换布局。未来片不自动绑定全部基线，阶段/批准/正式验收只写一处。登记与同步共用协作锁；遇外部修改时保留现场，不用旧快照覆盖。详见上述协议。
 
 `doctor` 可机械检查重复编号、依赖、死链、基线版本、正式验收与 Evidence 覆盖、声明输入摘要以及总览是否过期；`sync` 从切片档案派生进度区域。
 
@@ -219,7 +224,7 @@ python -B examples/project-state/demo.py --root "新的空目录"
 python tools/context_budget.py
 ```
 
-当前 v0.3.1 的本地验证和真实模型评测状态见 [`docs/RELEASE-v0.3.1.md`](docs/RELEASE-v0.3.1.md)；v0.3.0 历史记录继续保留。
+v0.3.2 的修复与测试边界见 [`docs/RELEASE-v0.3.2.md`](docs/RELEASE-v0.3.2.md)。旧版模型成绩仍属于原快照，不继承为本版结果；v0.3.1 与 v0.3.0 历史记录保持不变。
 
 最小对照评测 Harness 位于 [`evals/harness/`](evals/harness/README.md)，默认保留 **bare / autonomous / guided** 自测，也支持用不可变 Skill 快照配置 **bare / alpha.11 / v0.3.0 / candidate**。工具自测与真实模型结果分别记录；没有真实运行时不宣称提升成功率、Token 或速度。
 
@@ -257,6 +262,7 @@ ThinStack 的目标更窄：
 - 贡献指南：[`CONTRIBUTING.md`](CONTRIBUTING.md)
 - 安全说明：[`SECURITY.md`](SECURITY.md)
 - 版本记录：[`CHANGELOG.md`](CHANGELOG.md)
+- v0.3.2 修复记录：[`docs/RELEASE-v0.3.2.md`](docs/RELEASE-v0.3.2.md)
 - v0.3.1 交付记录：[`docs/RELEASE-v0.3.1.md`](docs/RELEASE-v0.3.1.md)
 - v0.3.0 历史记录：[`docs/RELEASE-v0.3.0.md`](docs/RELEASE-v0.3.0.md)
 

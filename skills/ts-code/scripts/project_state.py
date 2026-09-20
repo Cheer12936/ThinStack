@@ -1,4 +1,4 @@
-"""Read-only project doctor and opt-in overview renderer. Python 3.10+, stdlib only.
+"""Project record checks, bounded registration and opt-in overview rendering. Python 3.10+, stdlib only.
 
 Checks explicit records, not arbitrary business semantics. Never runs record commands,
 certifies report truth, edits slice history, or grants deployment permission.
@@ -6,6 +6,7 @@ certifies report truth, edits slice history, or grants deployment permission.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import difflib
 import hashlib
 import importlib.util
@@ -128,7 +129,36 @@ def required_schema(record):
             raise ValueError('Acceptance kinds must explicitly allow evidence types')
 
 
-def atomic_write(path: Path, data: bytes) -> None:
+@contextmanager
+def project_lock(root: Path):
+    """One cooperative lock for add and sync; never break an unknown/stale lock."""
+    lock = root / '.thinstack-sync.lock'
+    legacy = root / '.thinstack-add.lock'
+    if legacy.exists() or legacy.is_symlink():
+        raise ValueError('Legacy add lock exists; finish/recover that operation first')
+    fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    identity = os.fstat(fd)
+    os.close(fd)
+    try:
+        if legacy.exists() or legacy.is_symlink():
+            raise ValueError('Legacy add operation appeared; do not mix writer versions')
+        yield
+    finally:
+        try:
+            current = lock.lstat()
+            if (current.st_dev, current.st_ino) == (identity.st_dev, identity.st_ino):
+                lock.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def file_bytes(root: Path, path: Path):
+    """Recheck parent links on each access, including newly created destinations."""
+    checked = local(root, path.relative_to(root).as_posix(), exists=False)
+    return checked.read_bytes() if checked.exists() else None
+
+
+def atomic_write(path: Path, data: bytes, *, before_replace=None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix='.thinstack-', dir=path.parent)
     try:
@@ -136,11 +166,67 @@ def atomic_write(path: Path, data: bytes) -> None:
             output.write(data)
             output.flush()
             os.fsync(output.fileno())
+        if path.is_file() and not path.is_symlink():
+            os.chmod(temporary, path.stat().st_mode & 0o777)
+        if before_replace is not None:
+            before_replace()
         os.replace(temporary, path)
         temporary = None
     finally:
         if temporary is not None:
             Path(temporary).unlink(missing_ok=True)
+
+
+class WriteBatch:
+    """Rollback only our still-current bytes; conflicts preserve the recovery scene.
+
+    Used under project_lock. This is not an OS transaction against arbitrary writers.
+    """
+    def __init__(self, root):
+        self.root = root
+        self.entries = {}
+
+    def replace(self, path, data, expected, *, check_sources=None):
+        def check():
+            if check_sources is not None:
+                check_sources()
+            if file_bytes(self.root, path) != expected:
+                raise ValueError('Concurrent destination change: ' + str(path))
+        check()
+        if path in self.entries:
+            original, versions = self.entries[path]
+            if expected not in versions:
+                raise ValueError('Batch write does not follow its own snapshot')
+        else:
+            original, versions = expected, set()
+        # Include attempted versions: errors before OR after a second replace are recoverable.
+        versions.add(data)
+        self.entries[path] = (original, versions)
+        atomic_write(path, data, before_replace=check)
+
+    def rollback(self):
+        conflicts = []
+        for path, (original, ours) in self.entries.items():
+            try:
+                now = file_bytes(self.root, path)
+                if now != original and now not in ours:
+                    conflicts.append(str(path))
+            except (OSError, ValueError):
+                conflicts.append(str(path))
+        if conflicts:
+            # Rolling back other files could break references in the externally edited file.
+            raise ValueError('Rollback conflict; files preserved for recovery: ' + ', '.join(conflicts))
+        for path, (original, ours) in reversed(list(self.entries.items())):
+            if file_bytes(self.root, path) == original:
+                continue  # Attempt failed before writing, or already restored.
+            def check():
+                if file_bytes(self.root, path) not in ours:
+                    raise ValueError('Rollback conflict; external change preserved: ' + str(path))
+            check()
+            if original is None:
+                path.unlink()
+            else:
+                atomic_write(path, original, before_replace=check)
 
 
 def single_line(value: str, name: str) -> str:
@@ -149,19 +235,58 @@ def single_line(value: str, name: str) -> str:
     return re.sub(r'[\r\n\x00-\x1f]+', ' ', value).strip()
 
 
+def reject_unconfigured_history(root):
+    """Bounded discovery of documented legacy entrypoints, not a whole-repo scan."""
+    names = {'slice.md', 'slices.md', 'baseline.md', 'architectural_baseline.md',
+             'spec.md', 'run.md'}
+    found = []
+    for directory in ('.', 'docs', 'docs/architecture', 'docs/slices'):
+        base = local(root, directory, exists=False)
+        if not base.exists():
+            continue
+        if not base.is_dir():
+            raise ValueError('Expected project directory: ' + directory)
+        for path in base.iterdir():
+            if path.name.casefold() in names or (directory == 'docs/slices' and path.suffix.casefold() == '.md'):
+                found.append(path.relative_to(root).as_posix())
+    if found:
+        raise ValueError('Existing project documents need explicit configuration/adaptation: ' + ', '.join(sorted(found)))
+
+
+def next_slice_id(used, requested=None):
+    if requested is not None:
+        if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,79}', requested):
+            raise ValueError('--id must be a portable stable ASCII identifier')
+        if requested in used:
+            raise ValueError('Slice id already used (including cancelled records): ' + requested)
+        return requested
+    if not used:
+        return 'S-001'
+    parts = [re.fullmatch(r'(.*?)([0-9]+)', value) for value in sorted(used)]
+    if any(match is None for match in parts) or len({m.group(1) for m in parts}) != 1:
+        raise ValueError('Ambiguous existing numbering; supply --id without renumbering history')
+    prefix = parts[0].group(1)
+    width = max(len(m.group(2)) for m in parts)
+    number = max(int(m.group(2)) for m in parts) + 1
+    candidate = prefix + str(number).zfill(width)
+    if len(candidate) > 80:
+        raise ValueError('Next id exceeds supported length; explicitly adapt numbering')
+    return candidate
+
+
 def register_slice(root, *, title, goal, module, dependencies=(), acceptance=(),
                    evidence_kinds=(), kind='business', scope='current',
-                   approval_state='proposed', approval_source='', config='.thinstack.json'):
-    """Create one minimal permanent record, register it, and refresh the overview."""
+                   approval_state='proposed', approval_source='', config='.thinstack.json',
+                   slice_id=None, record_dir=None, baselines=()):
+    """Create a thin record without duplicating state or pinning unrelated baselines."""
     root = Path(root).resolve()
     if not root.is_dir():
         raise ValueError('Project root does not exist')
-    title = single_line(title, 'title')
-    goal = single_line(goal, 'goal')
-    module = single_line(module, 'module')
+    title, goal, module = (single_line(v, n) for v, n in
+                           ((title, 'title'), (goal, 'goal'), (module, 'module')))
     dependencies = list(dependencies)
     acceptance = [single_line(x, 'acceptance') for x in acceptance]
-    evidence_kinds = list(evidence_kinds)
+    evidence_kinds, baselines = list(evidence_kinds), list(baselines)
     if kind not in {'business', 'technical', 'foundation'} or scope not in {'current', 'deferred'}:
         raise ValueError('Invalid type/scope')
     if approval_state not in {'proposed', 'approved'}:
@@ -176,107 +301,86 @@ def register_slice(root, *, title, goal, module, dependencies=(), acceptance=(),
     if any(not isinstance(x, str) or not x for x in dependencies) or len(set(dependencies)) != len(dependencies):
         raise ValueError('Dependencies must be unique nonempty slice IDs')
 
-    config_path = local(root, config, exists=False)
-    originals = {}
-    if config_path.exists():
-        existing = Project(root, config).inspect()
-        if existing.fatal:
-            raise ValueError('Existing project records are ambiguous; repair them before adding a slice')
-        cfg = {key: (list(value) if isinstance(value, list) else value) for key, value in existing.config.items()}
-        used = {row['record']['id'] for row in existing.rows}
-        watched = dict(existing.files)
-    else:
-        cfg = {'schema_version': 1, 'overview': DEFAULT_OVERVIEW,
-               'records': [], 'baselines': [DEFAULT_BASELINE]}
-        used, watched = set(), {}
-        for name in (DEFAULT_OVERVIEW, DEFAULT_BASELINE):
-            if local(root, name, exists=False).exists():
-                raise ValueError('Existing project documents need an explicit .thinstack.json adaptation: ' + name)
-    unknown = sorted(set(dependencies) - used)
-    if unknown:
-        raise ValueError('Unknown dependencies: ' + ', '.join(unknown))
-
-    numeric = [int(match.group(1)) for value in used if (match := re.fullmatch(r'S-(\d+)', value))]
-    number = max(numeric, default=0) + 1
-    slice_id = f'S-{number:03d}'
-    while slice_id in used:
-        number += 1
-        slice_id = f'S-{number:03d}'
-    record_name = f'docs/slices/{slice_id}.md'
-    record_path = local(root, record_name, exists=False)
-    if record_path.exists():
-        raise ValueError('Refusing to overwrite existing slice path: ' + record_name)
-
-    created_defaults = not config_path.exists()
-    baseline = None
-    baseline_refs = {}
-    if not created_defaults:
-        for name in cfg['baselines']:
-            baseline_refs[name] = digest(local(root, name).read_bytes())
-    else:
-        baseline = (Path(__file__).resolve().parents[1] / 'assets' / 'baseline-template.md').read_bytes()
-        baseline_refs[DEFAULT_BASELINE] = digest(baseline)
-    record = {
-        'schema_version': 1, 'id': slice_id, 'title': title, 'type': kind,
-        'module': module, 'stage': 'planned', 'scope': scope,
-        'dependencies': dependencies, 'blocker': '',
-        'next': '实施前补充当前设计与验收' if not acceptance else '补充当前设计并实施',
-        'approval': {'state': approval_state, 'source': approval_source},
-        'acceptance': [{'id': f'AC-{index}', 'text': text, 'kinds': evidence_kinds}
-                       for index, text in enumerate(acceptance, 1)],
-        'inputs': [], 'baseline_refs': baseline_refs, 'evidence': '',
-        'deployment': '未知', 'customer_acceptance': '未知'
-    }
-    required_schema(record)
-    acceptance_text = '\n'.join(f'- {item}' for item in acceptance) if acceptance else '- 待本片准备实施时补充，不从标题推断。'
-    body = (f'# {slice_id} · {title}\n\n```thinstack-slice\n'
-            + json.dumps(record, ensure_ascii=False, indent=2) + '\n```\n\n'
-            + f'## 目标\n\n{goal}\n\n## 最小计划记录\n\n'
-            + f'- 类型／模块：{kind}／{module}\n- 阶段：已计划\n'
-            + f'- 依赖：{", ".join(dependencies) if dependencies else "无"}\n'
-            + f'- 批准：{approval_state}；{approval_source or "来源未确认"}\n\n'
-            + f'## 已知验收目标\n\n{acceptance_text}\n\n'
-            + '## 后续补充\n\n轮到本片实施时，在本记录补充业务规则、当前设计、边界、具体证据和恢复信息；不另建平行规格。\n')
-
-    lock = root / '.thinstack-add.lock'
-    fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-    os.close(fd)
-    if created_defaults and config_path.exists():
-        lock.unlink(missing_ok=True)
-        raise ValueError('Project records appeared concurrently; retry after inspecting them')
-    targets = [config_path, record_path]
-    if not created_defaults:
-        targets.append(local(root, cfg['overview']))
-    if created_defaults:
-        targets += [local(root, DEFAULT_OVERVIEW, exists=False), local(root, DEFAULT_BASELINE, exists=False)]
-    originals = {path: path.read_bytes() if path.exists() else None for path in targets}
-    try:
-        for name, expected in watched.items():
-            if local(root, name).read_bytes() != expected:
-                raise ValueError('Concurrent source change: ' + name)
-        if created_defaults:
-            overview = ('# 项目切片总览\n\n这是项目的统一阅读入口；切片状态来自各自永久档案。\n\n'
-                        '## 全量切片进度\n\n' + BEGIN + '\n' + END
-                        + '\n\n## 阻塞、下一步与最近变更\n\n按实际情况维护，不复制切片全文。\n')
-            atomic_write(local(root, DEFAULT_OVERVIEW, exists=False), overview.encode('utf-8'))
-            atomic_write(local(root, DEFAULT_BASELINE, exists=False), baseline)
-        atomic_write(record_path, body.encode('utf-8'))
-        cfg['records'].append(record_name)
-        atomic_write(config_path, (json.dumps(cfg, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
-        project = Project(root, config).inspect()
-        project.write()
-        project = Project(root, config).inspect()
-        return {'id': slice_id, 'path': record_name, 'overview': project.config['overview'],
-                'snapshot_sha256': project.snapshot}
-    except Exception:
-        for path, original in reversed(list(originals.items())):
-            if original is None:
-                path.unlink(missing_ok=True)
-            else:
-                atomic_write(path, original)
-        raise
-    finally:
-        lock.unlink(missing_ok=True)
+    # Lock BEFORE reading inventory or allocating an id; sync uses the same lock.
+    with project_lock(root):
+        config_path = local(root, config, exists=False)
+        created_defaults = not config_path.exists()
+        if not created_defaults:
+            existing = Project(root, config).inspect()
+            if existing.fatal:
+                raise ValueError('Existing project records are ambiguous; repair them before adding a slice')
+            cfg = {key: (list(value) if isinstance(value, list) else value) for key, value in existing.config.items()}
+            used = {row['record']['id'] for row in existing.rows}
+            watched = dict(existing.files)
+        else:
+            reject_unconfigured_history(root)
+            cfg = {'schema_version': 1, 'overview': DEFAULT_OVERVIEW,
+                   'records': [], 'baselines': [DEFAULT_BASELINE]}
+            used, watched = set(), {}
+            if baselines:
+                raise ValueError('A new baseline template is not a confirmed rule; bind baselines after design')
+        unknown = sorted(set(dependencies) - used)
+        if unknown:
+            raise ValueError('Unknown dependencies: ' + ', '.join(unknown))
+        sid = next_slice_id(used, slice_id)
+        if record_dir is None:
+            parents = {Path(p).parent.as_posix() for p in cfg['records']}
+            if len(parents) > 1:
+                raise ValueError('Multiple record directories; supply --record-dir without moving old records')
+            record_dir = next(iter(parents), 'docs/slices')
+        folder = local(root, record_dir, exists=False)
+        if folder.exists() and not folder.is_dir():
+            raise ValueError('Record directory is not a directory')
+        record_name = (folder / (sid + '.md')).relative_to(root).as_posix()
+        record_path = local(root, record_name, exists=False)
+        if record_path.exists():
+            raise ValueError('Refusing to overwrite existing slice path: ' + record_name)
+        selected = [local(root, p).relative_to(root).as_posix() for p in baselines]
+        if len(selected) != len(set(selected)) or set(selected) - set(cfg['baselines']):
+            raise ValueError('Selected baselines must be unique registered paths')
+        baseline_refs = {p: digest(watched[p]) for p in selected}
+        record = {
+            'schema_version': 1, 'id': sid, 'title': title, 'type': kind,
+            'module': module, 'stage': 'planned', 'scope': scope,
+            'dependencies': dependencies, 'blocker': '',
+            'next': '实施前核对批准范围，补充当前设计、验收及相关基线',
+            'approval': {'state': approval_state, 'source': approval_source},
+            'acceptance': [{'id': f'AC-{index}', 'text': text, 'kinds': evidence_kinds}
+                           for index, text in enumerate(acceptance, 1)],
+            'inputs': [], 'baseline_refs': baseline_refs, 'evidence': '',
+            'deployment': '未知', 'customer_acceptance': '未知'
+        }
+        required_schema(record)
+        body = (f'# {sid} · {text_cell(title)}\n\n```thinstack-slice\n'
+                + json.dumps(record, ensure_ascii=False, indent=2) + '\n```\n\n'
+                + f'## 目标\n\n{goal}\n\n'
+                + '当前阶段、依赖、批准和正式验收只维护在上方机器块中；正文说明理由、设计和历史，不重复最新状态。\n\n'
+                + '## 设计与历史\n\n轮到本片实施时，在这里补充规则与模块选择理由、边界及证据说明；保留重要变化历史，不另建平行规格。\n')
+        batch = WriteBatch(root)
+        try:
+            for name, expected in watched.items():
+                if file_bytes(root, local(root, name)) != expected:
+                    raise ValueError('Concurrent source change: ' + name)
+            if created_defaults:
+                reject_unconfigured_history(root)
+                overview = ('# 项目切片总览\n\n这是项目的统一阅读入口；切片状态来自各自永久档案。\n\n'
+                            '## 全量切片进度\n\n' + BEGIN + '\n' + END
+                            + '\n\n## 项目目标与范围\n\n按已确认事实补充；逐片阻塞与下一步见生成区，不另维护一份状态。\n')
+                baseline = (Path(__file__).resolve().parents[1] / 'assets' / 'baseline-template.md').read_bytes()
+                batch.replace(local(root, DEFAULT_OVERVIEW, exists=False), overview.encode('utf-8'), None)
+                batch.replace(local(root, DEFAULT_BASELINE, exists=False), baseline, None)
+            batch.replace(record_path, body.encode('utf-8'), None)
+            cfg['records'].append(record_name)
+            old_config = watched.get(config_path.relative_to(root).as_posix())
+            batch.replace(config_path, (json.dumps(cfg, ensure_ascii=False, indent=2) + '\n').encode('utf-8'), old_config)
+            project = Project(root, config).inspect()
+            project._write_locked(batch=batch)
+            project = Project(root, config).inspect()
+            return {'id': sid, 'path': record_name, 'overview': project.config['overview'],
+                    'snapshot_sha256': project.snapshot, 'project_result': project.report()['result']}
+        except Exception:
+            batch.rollback()
+            raise
 
 
 class Project:
@@ -526,38 +630,33 @@ class Project:
         return digest(canonical({p: digest(b) for p, b in sorted(self.files.items())}))
 
     def write(self, expected_snapshot=None):
+        with project_lock(self.root):
+            return self._write_locked(expected_snapshot)
+
+    def _write_locked(self, expected_snapshot=None, *, batch=None):
+        """Internal write path; caller must hold project_lock (add shares its batch)."""
         if self.fatal:
             raise ValueError('Malformed/ambiguous records: refusing to publish a partial overview')
         if expected_snapshot is not None and expected_snapshot != self.snapshot:
             raise ValueError('Expected snapshot mismatch; inspect again')
+        def check_sources():
+            for p, original in self.files.items():
+                if file_bytes(self.root, local(self.root, p, exists=False)) != original:
+                    raise ValueError('Concurrent source change: ' + p)
+        check_sources()
         if not self.stale:
             return False
-        lock = self.root / '.thinstack-sync.lock'
-        fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-        os.close(fd)
-        temp = None
+        destination = local(self.root, self.config['overview'])
+        expected = self.files[destination.relative_to(self.root).as_posix()]
+        own_batch = batch is None
+        batch = WriteBatch(self.root) if own_batch else batch
         try:
-            # Cooperative writers are locked; arbitrary concurrent writers are detected best-effort.
-            for p, original in self.files.items():
-                if local(self.root, p).read_bytes() != original:
-                    raise ValueError('Concurrent source change: ' + p)
-            destination = local(self.root, self.config['overview'])
-            fd, temp = tempfile.mkstemp(prefix='.thinstack-', dir=destination.parent)
-            with os.fdopen(fd, 'wb') as output:
-                output.write(self.expected_overview.encode('utf-8'))
-                output.flush()
-                os.fsync(output.fileno())
-            os.chmod(temp, destination.stat().st_mode & 0o777)
-            for p, original in self.files.items():
-                if local(self.root, p).read_bytes() != original:
-                    raise ValueError('Concurrent source change: ' + p)
-            os.replace(temp, destination)
-            temp = None
-            return True
-        finally:
-            if temp is not None:
-                Path(temp).unlink(missing_ok=True)
-            lock.unlink(missing_ok=True)
+            batch.replace(destination, self.expected_overview.encode('utf-8'), expected, check_sources=check_sources)
+        except Exception:
+            if own_batch:
+                batch.rollback()
+            raise
+        return True
 
     def report(self):
         return {'schema_version': 1, 'result': 'PROJECT_INVALID' if any(x['severity'] == 'error' for x in self.issues) else 'RECORDS_CONSISTENT',
@@ -580,6 +679,9 @@ def main(argv=None):
     p.add_argument('--write', action='store_true', help='Only sync may replace its marked generated region')
     p.add_argument('--expect', help='Optional expected snapshot_sha256 from doctor')
     p.add_argument('--require-verified', action='append', default=[], metavar='SLICE_ID')
+    p.add_argument('--id', dest='slice_id', help='Add: explicit unused ID when legacy numbering is ambiguous')
+    p.add_argument('--record-dir', help='Add: project-relative directory when existing record folders differ')
+    p.add_argument('--baseline', action='append', default=[], help='Add: explicitly bind only a relevant confirmed baseline')
     p.add_argument('--title', help='Add: concise slice title')
     p.add_argument('--goal', help='Add: observable business or technical result')
     p.add_argument('--module', help='Add: responsible module or boundary')
@@ -595,7 +697,7 @@ def main(argv=None):
     if args.action != 'sync' and (args.write or args.expect):
         p.error('--write/--expect require sync')
     add_values = (args.title, args.goal, args.module, args.depends_on, args.acceptance,
-                  args.evidence_kind, args.approval_source)
+                  args.evidence_kind, args.approval_source, args.slice_id, args.record_dir, args.baseline)
     if args.action != 'add' and any(add_values):
         p.error('slice registration arguments require add')
     if args.action == 'add' and (not args.title or not args.goal or not args.module):
@@ -607,7 +709,8 @@ def main(argv=None):
                                     acceptance=args.acceptance, evidence_kinds=args.evidence_kind,
                                     kind=args.type, scope=args.scope,
                                     approval_state=args.approval_state,
-                                    approval_source=args.approval_source, config=args.config)
+                                    approval_source=args.approval_source, config=args.config,
+                                    slice_id=args.slice_id, record_dir=args.record_dir, baselines=args.baseline)
             print(json.dumps(result, ensure_ascii=False, indent=2) if args.json
                   else f"SLICE_REGISTERED {result['id']}: {result['path']}")
             return 0

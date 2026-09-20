@@ -2,7 +2,7 @@
 name: ts-code
 license: MIT
 metadata:
-  version: "0.3.1"
+  version: "0.3.2"
 description: 明确调用 ts-code / ThinStack / 薄栈时启用；副本位于项目 .agents/skills 时，也用于该项目的正式软件设计、修复、切片实施与续做。按修复、新项目或业务切片组织交付，保留基线与验收约定。不用于普通解释和编程问答。
 ---
 

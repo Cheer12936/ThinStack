@@ -90,11 +90,13 @@ python skills/ts-code/scripts/project_state.py sync --root "项目目录" --writ
 python skills/ts-code/scripts/project_state.py doctor --root "项目目录" --require-verified S-001
 ```
 
-`add` 是显式写入动作，需要 `--title`、`--goal` 和 `--module`。首次使用会建立统一的 `docs/SLICES.md`、`docs/architecture/BASELINE.md`、`.thinstack.json` 和 `docs/slices/S-001.md`；若这些默认路径已有未适配文档则拒绝覆盖。验收目标可以暂空；一旦使用 `--acceptance`，必须用可重复的 `--evidence-kind` 明确允许的证据种类。`--approval-state approved` 必须同时给出真实 `--approval-source`。后续编号自动递增，依赖必须已登记；未来片只生成最小计划记录，轮到实施时在原档案补充。
+`add` 是显式写入动作，需要 `--title`、`--goal` 和 `--module`。首次使用会建立统一的 `docs/SLICES.md`、`docs/architecture/BASELINE.md`、`.thinstack.json` 和 `docs/slices/S-001.md`；未配置但发现 root/docs 中的 `slice.md`、`SLICES.md`、`BASELINE.md`、`ARCHITECTURAL_BASELINE.md`、`SPEC.md`、`RUN.md` 或已有 `docs/slices/*.md` 时停止，要求显式适配路径，不创建平行入口。检测是有界的已知入口检查，不保证发现任意命名的外部任务系统。验收目标可以暂空；一旦使用 `--acceptance`，必须用可重复的 `--evidence-kind` 明确允许的证据种类。`--approval-state approved` 必须同时给出真实 `--approval-source`。新项目仍从 S-001 开始；旧项目只有一个明确数字后缀序列时沿用前缀与补零宽度（如 TASK-009 → TASK-010），取消编号也计入。多个序列或无数字后缀时要求 `--id` 显式指定未使用编号，不改旧档案。沿用唯一的既有档案目录；多个目录时要求 `--record-dir` 指定本次目标。它们只是旧布局歧义的出口，不是按项目大小选择模式。依赖须已登记。
 
-`doctor` 只读；`sync` 默认展示差异；`sync --write` 显式刷新。可用 `--expect <doctor的snapshot_sha256>` 要求与先前检查一致。写入使用协作锁、源文件复核和临时文件替换；能发现常见并发变化，但不是对任意外部写入的事务或恶意攻击安全边界。崩溃遗留锁时先确认无进程写入，再人工处理，不自动删除未知锁。
+未来片的 `baseline_refs` 默认为空，不把新建基线模板视为已确认规则。轮到实施时由代理核对并绑定实际相关的基线；登记时确需绑定，可重复传 `--baseline <已登记相对路径>`，只绑定所选文件，不能指定尚未建立的模板。既有记录的绑定和证据不会被批量清空。机器块是阶段、依赖、批准、正式验收的唯一可编辑来源，正文仅记录目标、理由、设计与历史；旧文档不会被自动清理或迁移。
 
-退出码：0=声明范围结构/一致性检查通过；1=检测到问题（包括总览过期）；2=配置/读写/格式失败。不代表产品 GREEN。`--require-verified ID` 可重复，只检查明确指定的交付片；未验证的未来计划本身不应阻止当前片。
+`doctor` 只读；`sync` 默认展示差异；`sync --write` 显式刷新。可用 `--expect <doctor的snapshot_sha256>` 要求与先前检查一致。`add` 与 `sync --write` 共用 `.thinstack-sync.lock`，登记在读取来源和分配编号前取锁，并尊重旧 `.thinstack-add.lock`。写入前复核来源与目标；回滚只撤销本操作尝试写入且字节仍匹配的文件。检测到他人改动时不覆盖，保留现场并报告恢复冲突；不要在未核对残留配置/档案前盲目重试。崩溃可能留下锁或部分文件，先确认无写入进程再人工恢复；不自动删除未知锁，也不把协作锁声称为针对任意进程的完整事务。
+
+退出码：0=声明范围结构/一致性检查通过；1=检测到问题（包括总览过期）；2=配置/读写/格式失败。`add` 的 0 仅表示登记完成，JSON 中 `project_result` 另列整项检查状态；后续交付仍运行 doctor。不代表产品 GREEN。`--require-verified ID` 可重复，只检查明确指定的交付片；未验证的未来计划本身不应阻止当前片。
 
 证据失效时允许同步出诚实的“需重验”视图，但检查仍失败。编号/结构歧义时拒绝发布不完整总览。除明确调用 `add` 外，不创建档案；任何动作都不自动修改既有阶段、升级权限、删除记录、访问网络或运行测试。
 
