@@ -19,7 +19,7 @@ class RegistrationSafetyTests(unittest.TestCase):
     def setUp(self):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
-        self.root = Path(tmp.name)
+        self.root = Path(tmp.name).resolve()
 
     def add(self, **kwargs):
         return ps.register_slice(self.root, title='Next', goal='A concrete outcome', module='test', **kwargs)
@@ -278,11 +278,15 @@ class RegistrationSafetyTests(unittest.TestCase):
         self.add()
         old = ps.atomic_write
         path = self.root/'docs/slices/S-002.md'
+        injected = []
         def race(target, data, **kwargs):
-            if target == path:
+            # Windows temporary roots may arrive under a short-path alias.
+            if target.resolve() == path.resolve():
+                injected.append(True)
                 target.write_bytes(b'EXTERNAL')
             return old(target, data, **kwargs)
         with patch.object(ps, 'atomic_write', race), self.assertRaises(ValueError): self.add()
+        self.assertEqual(injected, [True], 'The concurrent write must actually be injected')
         self.assertEqual(path.read_bytes(), b'EXTERNAL')
 
     def test_after_replace_failure_is_recovered(self):
