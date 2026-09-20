@@ -5,7 +5,7 @@
 
 ThinStack 是一个面向 AI 软件开发的轻量交付方法与 `ts-code` Skill。它不要求模型机械执行一套大而全的流程，而是围绕当前业务结果，按需使用需求澄清、项目记忆、TDD、风险验证与机器一致性检查，让 AI **更快交付、少做无关工作、能跨会话继续，并且知道凭什么算完成**。
 
-当前版本：**v0.3.0**
+当前版本：**v0.3.1**
 
 ## 从“薄肌”到“薄栈”
 
@@ -132,9 +132,17 @@ git pull --ff-only
 python tools/manage.py update --skills-dir "你的客户端技能目录"
 ```
 
+公共安装保持显式调用。宿主支持项目本地技能目录时，可在用户明确选择的项目中安装同一份正文并启用项目匹配：
+
+```text
+python tools/manage.py install --skills-dir "项目目录/.agents/skills" --invocation project --project-root "项目目录"
+```
+
+更新默认保留该安装副本已有的调用策略。Codex 项目路径的“应触发、应不触发、跨项目隔离、更新后保留”已在 v0.3.1 做一次真实宿主验证；其他宿主仍需各自验证。
+
 请整体更新 `skills/ts-code`，不要只覆盖 `SKILL.md`。安装器不会猜客户端目录，也不会自动修改宿主配置；更新/卸载前会归档旧 Skill。
 
-不同宿主的技能发现、隐式调用和项目指令机制不同。默认包保持显式调用；项目级接入见 [`docs/PROJECT-ADOPTION.md`](docs/PROJECT-ADOPTION.md)。
+不同宿主的技能发现、隐式调用和项目指令机制不同。默认包保持显式调用；项目级接入与已验证边界见 [`docs/PROJECT-ADOPTION.md`](docs/PROJECT-ADOPTION.md)。
 
 ## 使用
 
@@ -156,9 +164,12 @@ $ts-code 建立项目总览和永久切片档案，本次只建档。
 
 ## 可选：把“纪律”变成机器检查
 
-v0.3.0 可以让现有 Markdown 项目显式接入机器字段，而不是维护第二套数据库。完整协议见 [`skills/ts-code/scripts/PROJECT_STATE.md`](skills/ts-code/scripts/PROJECT_STATE.md)。
+v0.3.1 可以让现有 Markdown 项目显式接入机器字段，并用一个登记动作创建最小切片档案、登记路径和刷新总览，而不是让用户维护第二套数据库。完整协议见 [`skills/ts-code/scripts/PROJECT_STATE.md`](skills/ts-code/scripts/PROJECT_STATE.md)。
 
 ```text
+# 获得项目建档授权后登记一个正式切片
+python skills/ts-code/scripts/project_state.py add --root "项目目录" --title "导出客户对账单" --goal "财务人员能导出未收款明细" --module reporting
+
 # 只读检查
 python skills/ts-code/scripts/project_state.py doctor --root "项目目录" --json
 
@@ -208,16 +219,16 @@ python -B examples/project-state/demo.py --root "新的空目录"
 python tools/context_budget.py
 ```
 
-当前 v0.3.0 已通过 Ubuntu / Windows CI；工具回归、项目状态检查和评测 Harness 的结果见 [`docs/RELEASE-v0.3.0.md`](docs/RELEASE-v0.3.0.md)。
+当前 v0.3.1 的本地验证和真实模型评测状态见 [`docs/RELEASE-v0.3.1.md`](docs/RELEASE-v0.3.1.md)；v0.3.0 历史记录继续保留。
 
-最小对照评测 Harness 位于 [`evals/harness/`](evals/harness/README.md)，用于比较同一任务下的 **bare / autonomous / guided**。框架和正反控制已经验证，但**当前没有真实模型对照结果，不宣称 ThinStack 已被证明提升某个模型的成功率、Token 或速度**。
+最小对照评测 Harness 位于 [`evals/harness/`](evals/harness/README.md)，默认保留 **bare / autonomous / guided** 自测，也支持用不可变 Skill 快照配置 **bare / alpha.11 / v0.3.0 / candidate**。工具自测与真实模型结果分别记录；没有真实运行时不宣称提升成功率、Token 或速度。
 
 ## 仓库结构
 
 ```text
 skills/ts-code/            # 可安装 Skill
   SKILL.md                 # 核心规则
-  references/              # 按需加载：memory / clarify / tdd / risk-proof / guided
+  references/              # 按需加载：proposal / memory / clarify / tdd / risk-proof / guided
   assets/                  # 总览、基线、切片模板
   scripts/                 # Evidence 与项目状态检查
 
@@ -246,6 +257,7 @@ ThinStack 的目标更窄：
 - 贡献指南：[`CONTRIBUTING.md`](CONTRIBUTING.md)
 - 安全说明：[`SECURITY.md`](SECURITY.md)
 - 版本记录：[`CHANGELOG.md`](CHANGELOG.md)
-- v0.3.0 交付记录：[`docs/RELEASE-v0.3.0.md`](docs/RELEASE-v0.3.0.md)
+- v0.3.1 交付记录：[`docs/RELEASE-v0.3.1.md`](docs/RELEASE-v0.3.1.md)
+- v0.3.0 历史记录：[`docs/RELEASE-v0.3.0.md`](docs/RELEASE-v0.3.0.md)
 
 MIT License。详见 [`LICENSE`](LICENSE)。

@@ -17,6 +17,9 @@ class ManagementTests(unittest.TestCase):
         self.source.mkdir()
         (self.source / "SKILL.md").write_text("---\nname: ts-code\n---\n", encoding="utf-8")
         (self.source / "content.txt").write_text("v1", encoding="utf-8")
+        (self.source / "agents").mkdir()
+        (self.source / "agents/openai.yaml").write_text(
+            "policy:\n  allow_implicit_invocation: false\n", encoding="utf-8")
 
     def test_install_refuses_overwrite_and_preserves_unrelated(self):
         target = module.manage("install", self.root, self.source)
@@ -59,5 +62,35 @@ class ManagementTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             module.manage("update", self.root, self.source)
         self.assertEqual((target / "content.txt").read_text(), "v1")
+
+    def test_default_install_is_explicit(self):
+        target = module.manage("install", self.root, self.source)
+        self.assertFalse(module.invocation_enabled(target))
+
+    def test_project_profile_is_scoped_and_preserved_on_update(self):
+        project = Path(self.tmp.name) / "project"
+        project.mkdir()
+        skills = project / ".agents" / "skills"
+        target = module.manage("install", skills, self.source,
+                               invocation="project", project_root=project)
+        self.assertTrue(module.invocation_enabled(target))
+        (self.source / "content.txt").write_text("v2", encoding="utf-8")
+        module.manage("update", skills, self.source)
+        self.assertTrue(module.invocation_enabled(target))
+        self.assertEqual((target / "content.txt").read_text(), "v2")
+
+    def test_project_profile_refuses_non_project_skills_dir(self):
+        project = Path(self.tmp.name) / "project"
+        project.mkdir()
+        with self.assertRaises(ValueError):
+            module.manage("install", self.root, self.source,
+                          invocation="project", project_root=project)
+
+    def test_project_profile_refuses_arbitrary_subdirectory(self):
+        project = Path(self.tmp.name) / "project"
+        project.mkdir()
+        with self.assertRaises(ValueError):
+            module.manage("install", project / ".codex" / "skills", self.source,
+                          invocation="project", project_root=project)
 
 if __name__ == "__main__": unittest.main()

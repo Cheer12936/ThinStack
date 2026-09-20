@@ -1,6 +1,6 @@
 # 项目检查与总览同步（可选接入）
 
-`project_state.py` 是交付记录检查器，不是安装器，不执行档案中的命令，不测试业务，也不能证明报告真实。默认只读；只有 `sync --write` 会写总览的生成区域，不改切片、基线、历史或批准。五份工作流参考不因此全部加载。
+`project_state.py` 是交付记录与一致性工具，不是安装器，不执行档案中的命令，不测试业务，也不能证明报告真实。`doctor` 只读，`sync` 默认预览；`sync --write` 只刷新总览生成区。获得项目建档授权后，`add` 可一次建立最小切片档案、登记路径并刷新总览，不替用户编造业务规则或批准。
 
 ## 接入
 
@@ -83,17 +83,20 @@
 以下从 ThinStack 仓库运行；只安装技能时使用安装位置下的同名 scripts 路径。
 
 ```text
+python skills/ts-code/scripts/project_state.py add --root "项目目录" --title "导出客户对账单" --goal "财务人员能导出指定客户的未收款明细" --module reporting --depends-on S-001 --acceptance "导出内容与查询结果一致" --evidence-kind runtime
 python skills/ts-code/scripts/project_state.py doctor --root "项目目录" --json
 python skills/ts-code/scripts/project_state.py sync --root "项目目录"
 python skills/ts-code/scripts/project_state.py sync --root "项目目录" --write
 python skills/ts-code/scripts/project_state.py doctor --root "项目目录" --require-verified S-001
 ```
 
+`add` 是显式写入动作，需要 `--title`、`--goal` 和 `--module`。首次使用会建立统一的 `docs/SLICES.md`、`docs/architecture/BASELINE.md`、`.thinstack.json` 和 `docs/slices/S-001.md`；若这些默认路径已有未适配文档则拒绝覆盖。验收目标可以暂空；一旦使用 `--acceptance`，必须用可重复的 `--evidence-kind` 明确允许的证据种类。`--approval-state approved` 必须同时给出真实 `--approval-source`。后续编号自动递增，依赖必须已登记；未来片只生成最小计划记录，轮到实施时在原档案补充。
+
 `doctor` 只读；`sync` 默认展示差异；`sync --write` 显式刷新。可用 `--expect <doctor的snapshot_sha256>` 要求与先前检查一致。写入使用协作锁、源文件复核和临时文件替换；能发现常见并发变化，但不是对任意外部写入的事务或恶意攻击安全边界。崩溃遗留锁时先确认无进程写入，再人工处理，不自动删除未知锁。
 
 退出码：0=声明范围结构/一致性检查通过；1=检测到问题（包括总览过期）；2=配置/读写/格式失败。不代表产品 GREEN。`--require-verified ID` 可重复，只检查明确指定的交付片；未验证的未来计划本身不应阻止当前片。
 
-证据失效时允许同步出诚实的“需重验”视图，但检查仍失败。编号/结构歧义时拒绝发布不完整总览。不自动修改阶段、升级权限、删除记录、访问网络或运行测试。
+证据失效时允许同步出诚实的“需重验”视图，但检查仍失败。编号/结构歧义时拒绝发布不完整总览。除明确调用 `add` 外，不创建档案；任何动作都不自动修改既有阶段、升级权限、删除记录、访问网络或运行测试。
 
 ## 一致性与安全边界
 

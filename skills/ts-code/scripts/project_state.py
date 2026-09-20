@@ -24,6 +24,8 @@ STAGES = {'clarify': '待澄清', 'approval': '待确认', 'planned': '已计划
           'doing': '开发中', 'verify': '待验证', 'verified': '已验证', 'cancelled': '已取消'}
 KINDS = {'mock', 'replay', 'runtime', 'live', 'manual'}
 MAX_FILE_BYTES = 16 * 1024 * 1024
+DEFAULT_OVERVIEW = 'docs/SLICES.md'
+DEFAULT_BASELINE = 'docs/architecture/BASELINE.md'
 
 
 def digest(data: bytes) -> str:
@@ -124,6 +126,157 @@ def required_schema(record):
             raise ValueError('Acceptance text is required')
         if not isinstance(ac['kinds'], list) or not ac['kinds'] or any(not isinstance(k, str) or k not in KINDS for k in ac['kinds']):
             raise ValueError('Acceptance kinds must explicitly allow evidence types')
+
+
+def atomic_write(path: Path, data: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix='.thinstack-', dir=path.parent)
+    try:
+        with os.fdopen(fd, 'wb') as output:
+            output.write(data)
+            output.flush()
+            os.fsync(output.fileno())
+        os.replace(temporary, path)
+        temporary = None
+    finally:
+        if temporary is not None:
+            Path(temporary).unlink(missing_ok=True)
+
+
+def single_line(value: str, name: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(name + ' is required')
+    return re.sub(r'[\r\n\x00-\x1f]+', ' ', value).strip()
+
+
+def register_slice(root, *, title, goal, module, dependencies=(), acceptance=(),
+                   evidence_kinds=(), kind='business', scope='current',
+                   approval_state='proposed', approval_source='', config='.thinstack.json'):
+    """Create one minimal permanent record, register it, and refresh the overview."""
+    root = Path(root).resolve()
+    if not root.is_dir():
+        raise ValueError('Project root does not exist')
+    title = single_line(title, 'title')
+    goal = single_line(goal, 'goal')
+    module = single_line(module, 'module')
+    dependencies = list(dependencies)
+    acceptance = [single_line(x, 'acceptance') for x in acceptance]
+    evidence_kinds = list(evidence_kinds)
+    if kind not in {'business', 'technical', 'foundation'} or scope not in {'current', 'deferred'}:
+        raise ValueError('Invalid type/scope')
+    if approval_state not in {'proposed', 'approved'}:
+        raise ValueError('Invalid approval state')
+    approval_source = re.sub(r'[\r\n\x00-\x1f]+', ' ', approval_source).strip()
+    if approval_state == 'approved' and not approval_source:
+        raise ValueError('Approved scope needs --approval-source')
+    if acceptance and not evidence_kinds:
+        raise ValueError('--evidence-kind is required when acceptance targets are supplied')
+    if any(x not in KINDS for x in evidence_kinds) or len(set(evidence_kinds)) != len(evidence_kinds):
+        raise ValueError('Invalid/duplicate evidence kind')
+    if any(not isinstance(x, str) or not x for x in dependencies) or len(set(dependencies)) != len(dependencies):
+        raise ValueError('Dependencies must be unique nonempty slice IDs')
+
+    config_path = local(root, config, exists=False)
+    originals = {}
+    if config_path.exists():
+        existing = Project(root, config).inspect()
+        if existing.fatal:
+            raise ValueError('Existing project records are ambiguous; repair them before adding a slice')
+        cfg = {key: (list(value) if isinstance(value, list) else value) for key, value in existing.config.items()}
+        used = {row['record']['id'] for row in existing.rows}
+        watched = dict(existing.files)
+    else:
+        cfg = {'schema_version': 1, 'overview': DEFAULT_OVERVIEW,
+               'records': [], 'baselines': [DEFAULT_BASELINE]}
+        used, watched = set(), {}
+        for name in (DEFAULT_OVERVIEW, DEFAULT_BASELINE):
+            if local(root, name, exists=False).exists():
+                raise ValueError('Existing project documents need an explicit .thinstack.json adaptation: ' + name)
+    unknown = sorted(set(dependencies) - used)
+    if unknown:
+        raise ValueError('Unknown dependencies: ' + ', '.join(unknown))
+
+    numeric = [int(match.group(1)) for value in used if (match := re.fullmatch(r'S-(\d+)', value))]
+    number = max(numeric, default=0) + 1
+    slice_id = f'S-{number:03d}'
+    while slice_id in used:
+        number += 1
+        slice_id = f'S-{number:03d}'
+    record_name = f'docs/slices/{slice_id}.md'
+    record_path = local(root, record_name, exists=False)
+    if record_path.exists():
+        raise ValueError('Refusing to overwrite existing slice path: ' + record_name)
+
+    created_defaults = not config_path.exists()
+    baseline = None
+    baseline_refs = {}
+    if not created_defaults:
+        for name in cfg['baselines']:
+            baseline_refs[name] = digest(local(root, name).read_bytes())
+    else:
+        baseline = (Path(__file__).resolve().parents[1] / 'assets' / 'baseline-template.md').read_bytes()
+        baseline_refs[DEFAULT_BASELINE] = digest(baseline)
+    record = {
+        'schema_version': 1, 'id': slice_id, 'title': title, 'type': kind,
+        'module': module, 'stage': 'planned', 'scope': scope,
+        'dependencies': dependencies, 'blocker': '',
+        'next': '实施前补充当前设计与验收' if not acceptance else '补充当前设计并实施',
+        'approval': {'state': approval_state, 'source': approval_source},
+        'acceptance': [{'id': f'AC-{index}', 'text': text, 'kinds': evidence_kinds}
+                       for index, text in enumerate(acceptance, 1)],
+        'inputs': [], 'baseline_refs': baseline_refs, 'evidence': '',
+        'deployment': '未知', 'customer_acceptance': '未知'
+    }
+    required_schema(record)
+    acceptance_text = '\n'.join(f'- {item}' for item in acceptance) if acceptance else '- 待本片准备实施时补充，不从标题推断。'
+    body = (f'# {slice_id} · {title}\n\n```thinstack-slice\n'
+            + json.dumps(record, ensure_ascii=False, indent=2) + '\n```\n\n'
+            + f'## 目标\n\n{goal}\n\n## 最小计划记录\n\n'
+            + f'- 类型／模块：{kind}／{module}\n- 阶段：已计划\n'
+            + f'- 依赖：{", ".join(dependencies) if dependencies else "无"}\n'
+            + f'- 批准：{approval_state}；{approval_source or "来源未确认"}\n\n'
+            + f'## 已知验收目标\n\n{acceptance_text}\n\n'
+            + '## 后续补充\n\n轮到本片实施时，在本记录补充业务规则、当前设计、边界、具体证据和恢复信息；不另建平行规格。\n')
+
+    lock = root / '.thinstack-add.lock'
+    fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    os.close(fd)
+    if created_defaults and config_path.exists():
+        lock.unlink(missing_ok=True)
+        raise ValueError('Project records appeared concurrently; retry after inspecting them')
+    targets = [config_path, record_path]
+    if not created_defaults:
+        targets.append(local(root, cfg['overview']))
+    if created_defaults:
+        targets += [local(root, DEFAULT_OVERVIEW, exists=False), local(root, DEFAULT_BASELINE, exists=False)]
+    originals = {path: path.read_bytes() if path.exists() else None for path in targets}
+    try:
+        for name, expected in watched.items():
+            if local(root, name).read_bytes() != expected:
+                raise ValueError('Concurrent source change: ' + name)
+        if created_defaults:
+            overview = ('# 项目切片总览\n\n这是项目的统一阅读入口；切片状态来自各自永久档案。\n\n'
+                        '## 全量切片进度\n\n' + BEGIN + '\n' + END
+                        + '\n\n## 阻塞、下一步与最近变更\n\n按实际情况维护，不复制切片全文。\n')
+            atomic_write(local(root, DEFAULT_OVERVIEW, exists=False), overview.encode('utf-8'))
+            atomic_write(local(root, DEFAULT_BASELINE, exists=False), baseline)
+        atomic_write(record_path, body.encode('utf-8'))
+        cfg['records'].append(record_name)
+        atomic_write(config_path, (json.dumps(cfg, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
+        project = Project(root, config).inspect()
+        project.write()
+        project = Project(root, config).inspect()
+        return {'id': slice_id, 'path': record_name, 'overview': project.config['overview'],
+                'snapshot_sha256': project.snapshot}
+    except Exception:
+        for path, original in reversed(list(originals.items())):
+            if original is None:
+                path.unlink(missing_ok=True)
+            else:
+                atomic_write(path, original)
+        raise
+    finally:
+        lock.unlink(missing_ok=True)
 
 
 class Project:
@@ -421,17 +574,43 @@ def main(argv=None):
         if callable(getattr(stream, 'reconfigure', None)):
             stream.reconfigure(encoding='utf-8', errors='backslashreplace')
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('action', choices=['doctor', 'sync'])
+    p.add_argument('action', choices=['doctor', 'sync', 'add'])
     p.add_argument('--root', required=True, type=Path)
     p.add_argument('--config', default='.thinstack.json')
     p.add_argument('--write', action='store_true', help='Only sync may replace its marked generated region')
     p.add_argument('--expect', help='Optional expected snapshot_sha256 from doctor')
     p.add_argument('--require-verified', action='append', default=[], metavar='SLICE_ID')
+    p.add_argument('--title', help='Add: concise slice title')
+    p.add_argument('--goal', help='Add: observable business or technical result')
+    p.add_argument('--module', help='Add: responsible module or boundary')
+    p.add_argument('--depends-on', action='append', default=[], metavar='SLICE_ID')
+    p.add_argument('--acceptance', action='append', default=[], help='Add: known acceptance target; repeat as needed')
+    p.add_argument('--evidence-kind', action='append', default=[], choices=sorted(KINDS))
+    p.add_argument('--type', default='business', choices=['business', 'technical', 'foundation'])
+    p.add_argument('--scope', default='current', choices=['current', 'deferred'])
+    p.add_argument('--approval-state', default='proposed', choices=['proposed', 'approved'])
+    p.add_argument('--approval-source', default='')
     p.add_argument('--json', action='store_true')
     args = p.parse_args(argv)
     if args.action != 'sync' and (args.write or args.expect):
         p.error('--write/--expect require sync')
+    add_values = (args.title, args.goal, args.module, args.depends_on, args.acceptance,
+                  args.evidence_kind, args.approval_source)
+    if args.action != 'add' and any(add_values):
+        p.error('slice registration arguments require add')
+    if args.action == 'add' and (not args.title or not args.goal or not args.module):
+        p.error('add requires --title, --goal and --module')
     try:
+        if args.action == 'add':
+            result = register_slice(args.root, title=args.title, goal=args.goal,
+                                    module=args.module, dependencies=args.depends_on,
+                                    acceptance=args.acceptance, evidence_kinds=args.evidence_kind,
+                                    kind=args.type, scope=args.scope,
+                                    approval_state=args.approval_state,
+                                    approval_source=args.approval_source, config=args.config)
+            print(json.dumps(result, ensure_ascii=False, indent=2) if args.json
+                  else f"SLICE_REGISTERED {result['id']}: {result['path']}")
+            return 0
         project = Project(args.root, args.config).inspect(args.require_verified)
         if args.action == 'sync':
             if args.write:

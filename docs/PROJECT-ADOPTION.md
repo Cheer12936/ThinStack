@@ -1,6 +1,14 @@
 # 项目级接入（可选，不全局接管）
 
-默认仍显式调用 `$ts-code`（Claude Code 通常为 `/ts-code`）。用户明确选择某项目使用 ThinStack 后，才在该项目启用；不修改全局配置，不把整份技能粘贴进 AGENTS.md / CLAUDE.md。安装器不代替用户修改这些文件。
+公共安装默认仍显式调用 `$ts-code`（Claude Code 通常为 `/ts-code`）。用户明确选择某项目使用 ThinStack 后，才为该项目采用宿主支持的项目配置；不把整份技能粘贴进 AGENTS.md / CLAUDE.md，也不为一个项目放开全局副本。
+
+Codex 会从当前目录向上到仓库根扫描 `.agents/skills`。项目采用时安装同一份正文，只改该副本的调用策略：
+
+```text
+python tools/manage.py install --skills-dir "项目目录/.agents/skills" --invocation project --project-root "项目目录"
+```
+
+公共目录省略 `--invocation`，保持显式调用。更新默认保留目标副本已有策略；如需明确收回项目自动匹配，可在更新时使用 `--invocation explicit`。安装器要求项目型目录精确为 `<project>/.agents/skills`，防止误把全局副本改成隐式调用。
 
 ## 最小入口片段
 
@@ -19,11 +27,13 @@ AGENTS.md/CLAUDE.md 只放入口、项目命令和约束，不复制参考文档
 
 ## 宿主差异与验证
 
-- 仓库标准运行包 `agents/openai.yaml` 保持 `allow_implicit_invocation: false`。支持该元数据的宿主中，项目自动使用需要相应的项目级/该安装副本配置；不能声称写一句 AGENTS.md 就越过禁止隐式调用的设置。不支持项目覆盖时保持显式入口，或使用宿主支持的项目启动命令显式调用。不要为一项目放开所有项目。
+- 仓库标准运行包 `agents/openai.yaml` 保持 `allow_implicit_invocation: false`。`--invocation project` 只把明确目标的 `.agents/skills/ts-code` 副本设为 `true`。Codex 路径与隔离还需用实际宿主记录验证；其他宿主使用它们正式支持的项目机制。
 - Claude Code 官方通过技能 frontmatter 的 `disable-model-invocation` 控制自动调用；`agents/openai.yaml` 不是它的统一权限设置。我们的默认描述要求明确启用；需要仅手动调用时在该项目副本采用宿主开关；需要项目自动调用时检查该副本与 Skill 工具权限。不要把一个宿主的字段抄给另一个宿主。
-- 本次只提供接入文档，没有在用户本机安装 hook、修改权限或证明自动调用已生效。
+- 安装器不写 hook、不覆盖项目指令、不修改仓库权限；自动调用是否生效仍须通过实际调用记录验证。
 
-在本机做四个烟雾检查：普通代码解释不加载；明确 ts-code 调用加载；已启用项目的正式开发按约定加载；其他项目不受影响。通过宿主日志/技能调用记录核对，不能只相信模型口头“已使用”。
+在本机做五个烟雾检查：普通代码解释不加载；明确 ts-code 调用加载；已启用项目的正式开发按约定加载；其他项目不受影响；更新后项目副本仍保留调用策略。通过宿主日志/技能调用记录核对，不能只相信模型口头“已使用”。
+
+v0.3.1 已在 Windows、Codex CLI `0.155.0-alpha.9.2`、`gpt-6-astra` medium 上执行一次这组检查：正式库存方案任务的原始轨迹显示读取项目副本 `SKILL.md`、`proposal.md` 与 `clarify.md`；普通 Python 解释未读取；另一项目未发现该副本；更新后策略和发现均保留。这是当前宿主的有界观察，不是其他版本或宿主的保证。
 
 ## 客户项目 CI
 
@@ -31,7 +41,7 @@ AGENTS.md/CLAUDE.md 只放入口、项目命令和约束，不复制参考文档
 
 检查器、验收内容及工作流需受审查和权限保护；同权限代理能改程序和证据时不能保证不可绕过。接入文档不自动设置分支保护。只检查版本、哈希与声明范围，真实业务测试仍要运行；人工记录的部署/客户验收不等于外部平台认证。
 
-## 官方参考（核对日期 2026-09-15）
+## 官方参考（核对日期 2026-09-20）
 - OpenAI 项目指令：https://learn.chatgpt.com/docs/agent-configuration/agents-md
 - OpenAI 技能文档：https://learn.chatgpt.com/docs/build-skills
 - Claude Code 技能与调用控制：https://code.claude.com/docs/en/skills

@@ -1,17 +1,18 @@
 {
-  "skills/ts-code/LICENSE": "55526735ba251779462b49a9815e8b6ee1168c717b244e45573ffe7851aaaadf",
-  "skills/ts-code/SKILL.md": "90e2613ab2f927d5b175b72548d43e991de2d0c1c255ef914fe95a4d6b2efe88",
   "skills/ts-code/agents/openai.yaml": "1676ce2b5e21e2a47de2b70a550059e596485350c0ad160d1aa49890efc78a44",
   "skills/ts-code/assets/baseline-template.md": "e14358a55ceaabd0346afc888e365572d49394361bd5a626f6449f3b7e438e93",
   "skills/ts-code/assets/icon.svg": "1d3f3ea9bb2e58336bf756ea3a2852db4ea651f5586a53a9650e6f893e4c4e04",
   "skills/ts-code/assets/project-overview-template.md": "0fb107c16731b92a859c9b2c79aca07c473e9a6f187950fc348b9f3e299c47f7",
   "skills/ts-code/assets/task-template.md": "f1a285cf5c18992b4ba93370617555588d5318738217c616765c06c2805d44e9",
-  "skills/ts-code/references/clarify.md": "7d9075db0f0d3abe01bc7cffc9656735ea1dcd80f7b9f6eb3ec2fb2b01928d3b",
+  "skills/ts-code/LICENSE": "55526735ba251779462b49a9815e8b6ee1168c717b244e45573ffe7851aaaadf",
+  "skills/ts-code/references/clarify.md": "e47cd04b5947c6df7c346ce8e25a16d45efee647c5d816f20e7dd0d1506b6600",
   "skills/ts-code/references/guided.md": "ba44cd3e8dfa114a9e9b938e830912f8b53a5e78451ffe0afd3b20dff066cbc3",
-  "skills/ts-code/references/memory.md": "02859308717869958c588d9c008419f1ab9cee7b368a00455684763a6b4a0b65",
+  "skills/ts-code/references/memory.md": "208678817eccfbca542a458fc49b7a56a3cf3ee873f34c236d870680421808e7",
+  "skills/ts-code/references/proposal.md": "3af961ae4825c6e9256f55b6155aee2bf784a82c29377cbb663d0064cca6307a",
   "skills/ts-code/references/risk-proof.md": "ca3cf5b3c5adb9e28f4042557461404f87d9a5d45a9f2844eb4736b8ed43d597",
   "skills/ts-code/references/tdd.md": "07f08d7557990f50adafe0ee022531b5bceb43e6c0eed4bb82409ff35b9a8ff5",
-  "skills/ts-code/scripts/PROJECT_STATE.md": "143cecc1002a2435c3ad6d8e253afc9f8863826f76769ec3ca4f1d8b2c489475",
   "skills/ts-code/scripts/check_evidence.py": "201f915e511678961eb357b5791f303d7aef93d94ca3c70090a3ae535b56e9bc",
-  "skills/ts-code/scripts/project_state.py": "bf7c51db2e3dd8d49d40ef6aff58182207bc77a10d854c7b89c400f3853eeddb"
+  "skills/ts-code/scripts/PROJECT_STATE.md": "161656a5edef50c8dfaf9e2a77636d734f750192725ff198cde9a102a3df1db6",
+  "skills/ts-code/scripts/project_state.py": "dcd8fea1c6948cb5078396f49c4c1c4a6e3073c848f3ce1e2a296367b4bf8682",
+  "skills/ts-code/SKILL.md": "3351baf7de0777274a2a42cdec42342cb15f59b949540cb3e8bbbfc78e2ab183"
 }

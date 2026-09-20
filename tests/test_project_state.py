@@ -299,5 +299,59 @@ class ProjectTests(unittest.TestCase):
         self.assertEqual(p.returncode, 0, p.stdout+p.stderr)
 
 
+class SliceRegistrationTests(unittest.TestCase):
+    def setUp(self):
+        t = tempfile.TemporaryDirectory()
+        self.addCleanup(t.cleanup)
+        self.root = Path(t.name)
+
+    def test_first_add_initializes_fixed_project_structure(self):
+        result = ps.register_slice(
+            self.root, title='登记回款', goal='财务人员可以登记客户回款',
+            module='receivables', acceptance=['登记后未收金额减少'],
+            evidence_kinds=['runtime'])
+        self.assertEqual(result['id'], 'S-001')
+        self.assertEqual(result['path'], 'docs/slices/S-001.md')
+        self.assertTrue((self.root/'docs/SLICES.md').is_file())
+        self.assertTrue((self.root/'docs/architecture/BASELINE.md').is_file())
+        cfg = json.loads((self.root/'.thinstack.json').read_text(encoding='utf-8'))
+        self.assertEqual(cfg['records'], ['docs/slices/S-001.md'])
+        self.assertIn('## 目标\n\n财务人员可以登记客户回款', (self.root/'docs/slices/S-001.md').read_text(encoding='utf-8'))
+        project = ps.Project(self.root).inspect()
+        self.assertEqual(project.rows[0]['record']['acceptance'][0]['text'], '登记后未收金额减少')
+        self.assertFalse(project.stale)
+
+    def test_add_uses_next_stable_id_and_preserves_existing_record(self):
+        fixture(self.root)
+        before = (self.root/'docs/slices/001.md').read_bytes()
+        result = ps.register_slice(
+            self.root, title='查询未收款', goal='财务人员可以查询未收款',
+            module='receivables', dependencies=['S-001'])
+        self.assertEqual(result['id'], 'S-002')
+        self.assertEqual((self.root/'docs/slices/001.md').read_bytes(), before)
+        self.assertTrue((self.root/'docs/slices/S-002.md').is_file())
+        project = ps.Project(self.root).inspect()
+        self.assertEqual([row['record']['id'] for row in project.rows], ['S-001', 'S-002'])
+
+    def test_add_rejects_unknown_dependency_without_writes(self):
+        with self.assertRaises(ValueError):
+            ps.register_slice(self.root, title='导出', goal='导出对账单',
+                              module='reporting', dependencies=['S-999'])
+        self.assertFalse((self.root/'.thinstack.json').exists())
+
+    def test_approved_add_requires_source(self):
+        with self.assertRaises(ValueError):
+            ps.register_slice(self.root, title='导出', goal='导出对账单',
+                              module='reporting', approval_state='approved')
+
+    def test_cli_add_registers_slice(self):
+        args = [sys.executable, '-B', str(SCRIPT), 'add', '--root', str(self.root),
+                '--title', '客户对账单', '--goal', '财务人员导出未收款明细',
+                '--module', 'reporting', '--json']
+        result = subprocess.run(args, capture_output=True, text=True, encoding='utf-8')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(json.loads(result.stdout)['id'], 'S-001')
+
+
 if __name__ == '__main__':
     unittest.main()

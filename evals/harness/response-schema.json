@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "message", "questions", "usage"],
+  "properties": {
+    "status": {"type": "string", "enum": ["complete", "blocked", "question"]},
+    "message": {"type": "string"},
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["topic", "text"],
+        "properties": {
+          "topic": {"type": "string", "enum": ["business_goal", "ownership", "other"]},
+          "text": {"type": "string"}
+        }
+      }
+    },
+    "usage": {"type": "null"}
+  }
+}

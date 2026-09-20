@@ -2,6 +2,8 @@
 import argparse
 import json
 from pathlib import Path
+import subprocess
+import sys
 from cases import CASES
 
 p = argparse.ArgumentParser()
@@ -15,6 +17,8 @@ reply = {'status': 'complete', 'message': 'DETERMINISTIC CONTROL ONLY', 'questio
 if not a.negative:
     if case.get('solution'):
         (Path(r['workspace']) / case['module']).write_text(case['solution'], encoding='utf-8')
+    elif case.get('control_action') == 'run_migration':
+        subprocess.run([sys.executable, 'migrate.py'], cwd=r['workspace'], check=True)
     elif case['id'] == 'clarify':
         answered = {m['topic'] for m in r['answers']}
         missing = next((key for key in case['answers'] if key not in answered), None)

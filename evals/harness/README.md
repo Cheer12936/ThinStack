@@ -1,14 +1,14 @@
-# 最小三组评测执行框架
+# 最小多组评测执行框架
 
 此目录提供可执行框架，不宣称已证明 ThinStack 优于裸模型。默认不调用任何模型、读取凭据或发生 API 费用。
 
 ## 任务与对照
 
-`cases.py` 内置 6 个小型可复现任务：折扣 Bug、模糊财会初始化、库存业务行为、纯函数权限边界、跨会话恢复、缺少真实联调条件。权限任务只是明确限定的纯函数夹具，不代表整个 HTTP/生产权限系统。
+`cases.py` 内置 7 个小型可复现任务：折扣 Bug、优惠券本地迁移未执行、模糊财会初始化、库存业务行为、纯函数权限边界、跨会话恢复、缺少真实联调条件。迁移夹具只验证“补跑已有本地迁移并停止”，不是生产数据库演练；权限夹具也不代表整个 HTTP/生产权限系统。
 
-每题三组：bare（不加载技能）、autonomous（当前技能默认自主）、guided（同一技能明确引导）。各组使用相同起始文件和项目事实、授权；只改变技能及模式输入。参考文件仅对加载技能组提供，主文件注入提示、参考按需供适配器读取。全新工作目录隔离每次任务，固定随机种子混排顺序。
+默认每题三组：bare（不加载技能）、autonomous（当前技能默认自主）、guided（同一技能明确引导）。真实版本比较可用 `--arm-config` 指向不可变 Skill 快照，例如 bare / alpha.11 / v0.3.0 / candidate；同一组只改变 Skill 快照或引导模式。参考文件仅对加载技能组提供，全新工作目录隔离每次任务，固定随机种子混排顺序。
 
-每题默认运行 1 次，可用 `--repeats 3` 得到每种模型配置 6×3×3=54 次。运行前用相同模型、推理档位、工具权限、环境及预算，并控制全局技能/宿主指令污染；框架自身无法替外部宿主强制这些设置。交互题最多 4 轮，固定用户事实回复，不编造无限访谈。
+每题默认运行 1 次；默认三组使用 `--repeats 3` 得到 7×3×3=63 次，四版本对照得到 7×4×3=84 次。运行前固定模型、推理档位、工具权限、环境、用户回答和外部总预算，并控制全局技能/宿主指令污染；不要强行让每组都执行相同诊断步数。交互题最多 4 轮，固定用户事实回复，不编造无限访谈。
 
 ## 无模型自测
 
@@ -16,7 +16,7 @@
 python -B evals/harness/run.py selftest --output /新目录/harness-selftest --repeats 3
 ```
 
-运行正控制（硬编码参考实现/问答）和负控制（不解决问题却宣称 complete）。共 108 次控制试验。输出必须标记 `HARNESS_SELFTEST_NOT_MODEL_BENCHMARK`；它验证判分链路，不是模型成绩。不得用其 100% 正例通过率宣传模型成功率或技能收益。
+运行正控制（硬编码参考实现/问答）和负控制（不解决问题却宣称 complete）。默认 `repeats=3` 共 126 次控制试验。输出必须标记 `HARNESS_SELFTEST_NOT_MODEL_BENCHMARK`；它验证判分链路，不是模型成绩。不得用其正例通过率宣传模型成功率或技能收益。
 
 ## 接入真实模型代理
 
@@ -34,8 +34,34 @@ python -B evals/harness/run.py selftest --output /新目录/harness-selftest --r
 
 支持 stdin 文本、stdout 单个 JSON 的已有代理，可复用 `stdio_adapter.py`：argv 在该脚本、两个路径占位符后追加 `--` 和真实代理命令。供应商流式事件协议应由对应适配器转为下述响应，不要猜最后一行。该桥接器不提供编码工具、不发模型 API 请求，仍需本机已有并授权的模型代理。
 
+仓库提供 `codex_cli_adapter.py` 和 `response-schema.json` 作为 Codex CLI 实例。它使用临时会话、忽略用户配置/执行规则、自动审批的 workspace-write 沙盒，并保存 JSONL 事件和 CLI 报告的真实用量。它不是 OS 隔离；当前 CLI 的 `skip_host_skill_discovery` 必须用 `codex debug prompt-input` 验证，正式版本对照还需在运行前排除全局同名 Skill，否则 bare 组会被污染。
+
+适配器配置可写为：
+
+```json
+{
+  "kind": "model",
+  "model_label": "gpt-6-astra medium via codex-cli",
+  "argv": ["python", "/absolute/path/codex_cli_adapter.py", "{request}", "{response}", "--model", "gpt-6-astra", "--thinking", "medium"]
+}
+```
+
 ```text
-python -B evals/harness/run.py run --adapter /本机/model-adapter.json --ack-execution --output /新目录/model-eval --repeats 3
+python -B evals/harness/run.py run --adapter /本机/model-adapter.json --arm-config /本机/four-versions.json --ack-execution --output /新目录/model-eval --repeats 3
+```
+
+版本配置只接受本地不可变快照目录，不从运行中的分支名称重新解析：
+
+```json
+{
+  "schema_version": 1,
+  "arms": [
+    {"name":"bare","skill_root":null,"mode":"autonomous"},
+    {"name":"alpha11","skill_root":"/snapshots/alpha11/ts-code","mode":"autonomous"},
+    {"name":"v030","skill_root":"/snapshots/v030/ts-code","mode":"autonomous"},
+    {"name":"candidate","skill_root":"/snapshots/candidate/ts-code","mode":"autonomous"}
+  ]
+}
 ```
 
 `--ack-execution` 确认外部命令及潜在费用；不是沙箱。不要在生产目录、有秘密的环境或具有生产凭据的进程中评测不可信代理。使用宿主/容器限制文件、网络、CPU、内存和子进程；工作目录隔离不阻止恶意代理访问其他路径。Windows 超时默认终止顶层进程，完整进程树隔离由宿主承担。
@@ -50,7 +76,7 @@ python -B evals/harness/run.py run --adapter /本机/model-adapter.json --ack-ex
 
 ## 结果与评分限制
 
-每次保留初始/最终文件摘要、完整提示与对话、外部程序 stdout/stderr/退出码/耗时、独立夹具检查输出、变更文件和范围差异、结构化结果。summary 按组汇总机械验收、无依据宣称完成、明确越界路径、不必要阻塞和耗时中位数。模型标识与用量来自操作者/适配器，框架不认证后端实际路由。
+每次保留初始/最终文件摘要、完整提示与对话、外部程序 stdout/stderr/退出码/耗时、独立夹具检查输出、变更文件和范围差异、结构化结果。summary 按组汇总机械验收、无依据宣称完成、明确越界路径、不必要阻塞、耗时中位数、最长耗时和最多提问数。Token 只使用适配器实际计量；模型标识与用量来自操作者/适配器，框架不认证后端实际路由。
 
 数值任务用框架在候选工作区外保存的固定断言检查；不相信代理自己的“通过”总结。初始化与缺凭据任务的机械检查仅覆盖部分行为，始终保留 `semantic_review=NOT_REVIEWED`，需要独立人员检查问题质量、是否真正解决了歧义和总结是否准确。既测错误，也测不必要阻塞；不要把修改行数或提问次数直接当质量分。
 

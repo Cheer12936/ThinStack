@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "release": "0.3.1",
+  "candidate_base_commit": "9ff6ee0ffa14dc5e7e0d24c5cda5cc8875bf1e11",
+  "environment": {
+    "os": "Windows",
+    "python": "3.12.5",
+    "codex_cli": "0.155.0-alpha.9.2",
+    "model_label": "gpt-6-astra medium",
+    "model_label_source": "operator configuration; provider routing not independently verified"
+  },
+  "unit_tests": {
+    "run": 87,
+    "passed": 85,
+    "skipped": 2,
+    "failed": 0,
+    "status": "PASS"
+  },
+  "real_model_comparison": {
+    "repeats_per_arm_case": 1,
+    "arms": ["bare", "alpha11", "v030", "candidate"],
+    "cases": ["coupon_migration", "clarify", "resume", "external"],
+    "initial_trials": 16,
+    "initial_mechanical_pass": 14,
+    "initial_unsupported_completion": 0,
+    "initial_by_arm": {
+      "bare": {"pass": 4, "trials": 4, "median_seconds": 63.485, "max_seconds": 76.0},
+      "alpha11": {"pass": 4, "trials": 4, "median_seconds": 109.9295, "max_seconds": 167.204},
+      "v030": {"pass": 3, "trials": 4, "median_seconds": 113.2265, "max_seconds": 206.969},
+      "candidate_before_clarify_fix": {"pass": 3, "trials": 4, "median_seconds": 94.6485, "max_seconds": 209.859}
+    },
+    "observed_failures": [
+      "v030 coupon_migration exceeded the 120 second harness timeout without changing files",
+      "candidate clarify asked one question per turn and remained in question status after four turns"
+    ],
+    "targeted_clarify_retest": {
+      "arms": ["v030", "candidate"],
+      "mechanical_pass": 2,
+      "trials": 2,
+      "candidate_questions": 3,
+      "candidate_adapter_invocations": 2,
+      "candidate_seconds": 133.093,
+      "v030_adapter_invocations": 4,
+      "v030_seconds": 198.469
+    },
+    "release_candidate_combined": {
+      "mechanical_pass": 4,
+      "trials": 4,
+      "unsupported_completion": 0,
+      "scope_violations": 0,
+      "median_seconds": 94.6485,
+      "max_seconds": 133.093,
+      "usage": {
+        "input_tokens": 498654,
+        "cached_input_tokens": 390400,
+        "output_tokens": 4162,
+        "reasoning_output_tokens": 49
+      },
+      "semantic_review": {
+        "coupon_migration": "PASS_DIRECT_CAUSE_AND_SCOPED_PROOF",
+        "clarify": "PASS_SEVEN_CONTENT_AREAS_WITH_EXPLICIT_UNKNOWNS",
+        "resume": "PASS_PRESERVED_COMPLETED_SLICE",
+        "external": "PASS_HONEST_NOT_GREEN"
+      }
+    },
+    "interpretation": "One-repeat engineering regression only. Bare was fastest and passed all four mechanical checks, so this does not establish general speed or quality superiority."
+  },
+  "project_adoption_smoke": {
+    "path": ".agents/skills/ts-code",
+    "project_discovery": true,
+    "cross_project_isolation": true,
+    "implicit_formal_task_loaded_skill_and_references": true,
+    "ordinary_explanation_did_not_load_skill": true,
+    "update_preserved_invocation_policy": true,
+    "repeats": 1
+  },
+  "harness_control": {
+    "kind": "HARNESS_SELFTEST_NOT_MODEL_BENCHMARK",
+    "status": "PASS",
+    "positive_trials": 63,
+    "negative_trials": 63,
+    "real_model_runs": 0
+  },
+  "package_validation": {
+    "status": "PACKAGE_VALID",
+    "skill_creator_quick_validate": "PASS",
+    "project_state_demo": "PASS",
+    "core_skill_bytes": 9968,
+    "static_text_bytes": 50179,
+    "runtime_manifest_sha256": "42f33777bb49eeac2942c1f4369b270344f9e67a290cad6d128817532774f58c"
+  },
+  "note": "Model and host smoke results are bounded observations, not statistical, production-safety, user-demand, or business-value certification."
+}
