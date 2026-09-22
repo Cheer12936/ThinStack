@@ -1,6 +1,6 @@
 {
   "skills/ts-code/LICENSE": "55526735ba251779462b49a9815e8b6ee1168c717b244e45573ffe7851aaaadf",
-  "skills/ts-code/SKILL.md": "b03e5b88481384d0accfc7554483875bddb7b9bcfb1e3d3eb99dc8aab51e4b36",
+  "skills/ts-code/SKILL.md": "1ff778285e2b10c05bdb1edc6a0cc2d7ce001afccdef09b30aa910335fc211c1",
   "skills/ts-code/agents/openai.yaml": "1676ce2b5e21e2a47de2b70a550059e596485350c0ad160d1aa49890efc78a44",
   "skills/ts-code/assets/baseline-template.md": "e14358a55ceaabd0346afc888e365572d49394361bd5a626f6449f3b7e438e93",
   "skills/ts-code/assets/icon.svg": "1d3f3ea9bb2e58336bf756ea3a2852db4ea651f5586a53a9650e6f893e4c4e04",
@@ -9,7 +9,7 @@
   "skills/ts-code/references/clarify.md": "2601ad52e982c30a1beca4ee1c395747d8a8f2bcbc9787d0a74976ed28518399",
   "skills/ts-code/references/guided.md": "ba44cd3e8dfa114a9e9b938e830912f8b53a5e78451ffe0afd3b20dff066cbc3",
   "skills/ts-code/references/memory.md": "264b52eec43c904924e3f8a7da475b004f9334b5c1eeb0b6f1446504c9f13f0d",
-  "skills/ts-code/references/proposal.md": "3af961ae4825c6e9256f55b6155aee2bf784a82c29377cbb663d0064cca6307a",
+  "skills/ts-code/references/proposal.md": "12534497e044cee5e33ec99497b331632d78062ef22123fc4c65e2b62de9c78f",
   "skills/ts-code/references/risk-proof.md": "ca3cf5b3c5adb9e28f4042557461404f87d9a5d45a9f2844eb4736b8ed43d597",
   "skills/ts-code/references/tdd.md": "07f08d7557990f50adafe0ee022531b5bceb43e6c0eed4bb82409ff35b9a8ff5",
   "skills/ts-code/scripts/PROJECT_STATE.md": "ed8a3e8507ca6cf6da737607a30ec4b1895bd3014a56a13fb6c9b0415fffe0fd",
