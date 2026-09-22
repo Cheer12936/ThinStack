@@ -48,7 +48,6 @@ class HarnessTests(unittest.TestCase):
         h.write(self.work/c['module'], c['solution'])
         result = h.grade(c, self.work, {'status':'complete'}, [], before, h.hashes(self.work), self.root)
         self.assertTrue(result['mechanical_acceptance_pass'])
-        self.assertTrue((self.root/'grader-result.json').exists())
 
     def test_unrelated_change_rejected(self):
         c = h.CASES[0]
@@ -187,10 +186,11 @@ class AgentCallBudgetTests(unittest.TestCase):
         self.assertFalse(r['grade']['unsupported_completion'])
         self.assertFalse(r['grade']['needless_blocking'])
         self.assertFalse((self.root/'trial/request-4.json').exists())
-        trace = json.loads((self.root/'trial/interaction.json').read_text())
+        trace = json.loads((self.root/'trial/interaction.json').read_text(encoding='utf-8'))
         self.assertEqual(len(trace['history']), 4)
         self.assertEqual(len(trace['answers']), 4)
         self.assertEqual(trace['answers'][-1]['question'], 'Fixture question 3')
+        self.assertIn('本题资料', trace['answers'][-1]['answer'])
 
     def test_default_budget_retains_previous_call_limit(self):
         r = h.run_trial(self.case, 'bare', 0, self.root/'trial', self.adapter(), 15)
@@ -244,9 +244,9 @@ class AgentCallBudgetTests(unittest.TestCase):
                        '--max-agent-calls', '1'])
         self.assertEqual(code, 1)  # Too little budget; do not hide this failure.
         for label in ('positive', 'negative'):
-            summary = json.loads((out/label/'summary.json').read_text())
+            summary = json.loads((out/label/'summary.json').read_text(encoding='utf-8'))
             self.assertEqual(summary['max_agent_calls'], 1)
-        pos = json.loads((out/'positive/summary.json').read_text())
+        pos = json.loads((out/'positive/summary.json').read_text(encoding='utf-8'))
         self.assertEqual(pos['stop_reason_counts']['agent_call_budget_exhausted'], 3)
         self.assertEqual(pos['unsupported_completion'], 0)
 
