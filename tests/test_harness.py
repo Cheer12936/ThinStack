@@ -48,6 +48,7 @@ class HarnessTests(unittest.TestCase):
         h.write(self.work/c['module'], c['solution'])
         result = h.grade(c, self.work, {'status':'complete'}, [], before, h.hashes(self.work), self.root)
         self.assertTrue(result['mechanical_acceptance_pass'])
+        self.assertTrue((self.root/'grader-result.json').exists())
 
     def test_unrelated_change_rejected(self):
         c = h.CASES[0]
