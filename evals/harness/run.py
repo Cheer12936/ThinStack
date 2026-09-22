@@ -20,11 +20,19 @@ import subprocess
 import sys
 import time
 from datetime import datetime, timezone
+from collections import Counter
 
 from cases import CASES, COMMON
 
 ROOT = Path(__file__).resolve().parents[2]
 ARMS = ['bare', 'autonomous', 'guided']
+# Evaluator resource budget, not the Skill's clarification-round policy.
+DEFAULT_MAX_AGENT_CALLS = 4
+
+
+def validate_call_budget(value):
+    if type(value) is not int or not 1 <= value <= 100:
+        raise ValueError('max_agent_calls must be an integer from 1 to 100')
 
 
 def default_arms():
@@ -155,7 +163,9 @@ def grade(case, workspace, response, history, before, after, directory):
             'question_count': sum(len(t.get('questions', [])) for t in history)}
 
 
-def run_trial(case, arm, repetition, directory, adapter, timeout):
+def run_trial(case, arm, repetition, directory, adapter, timeout,
+              max_agent_calls=DEFAULT_MAX_AGENT_CALLS):
+    validate_call_budget(max_agent_calls)
     if isinstance(arm, str):
         arm = next(item for item in default_arms() if item['name'] == arm)
     arm_name = arm['name']
@@ -185,7 +195,8 @@ def run_trial(case, arm, repetition, directory, adapter, timeout):
     answers, history, invocations = [], [], []
     response = {'status': 'blocked', 'message': 'Adapter did not produce a valid response', 'questions': []}
     protocol_error = None
-    for turn in range(4):
+    stop_reason = 'agent_call_budget_exhausted'
+    for turn in range(max_agent_calls):
         request_path = directory / f'request-{turn}.json'
         response_path = directory / f'response-{turn}.json'
         request = {'schema_version': 1, 'case_id': case['id'], 'arm': arm_name, 'repetition': repetition,
@@ -195,32 +206,48 @@ def run_trial(case, arm, repetition, directory, adapter, timeout):
         dump(request_path, request)
         replacements = {'{request}': str(request_path), '{response}': str(response_path), '{workspace}': str(workspace)}
         argv = [replacements.get(arg, arg) for arg in adapter['argv']]
+        stop_reason = 'adapter_error'
         try:
             invocation = invoke(argv, workspace, timeout)
             dump(directory / f'command-{turn}.json', invocation)
             invocations.append(invocation)
-            if invocation['exit_code'] or invocation['timed_out']:
-                raise ValueError('Adapter failed or timed out')
+            if invocation['timed_out']:
+                stop_reason = 'adapter_timeout'
+                raise ValueError('Adapter timed out')
+            if invocation['exit_code']:
+                raise ValueError('Adapter failed')
+            stop_reason = 'protocol_error'
             response = parse_response(response_path)
         except (ValueError, OSError, json.JSONDecodeError) as exc:
             protocol_error = str(exc)
             break
         history.append(response)
         if response['status'] != 'question':
+            stop_reason = response['status']
             break
+        stop_reason = 'agent_call_budget_exhausted'
         for q in response['questions']:
             answer = case.get('answers', {}).get(q['topic'], '本题资料已给出全部可用事实；未知条件没有额外授权，请按事实处理。')
             answers.append({'topic': q['topic'], 'question': q['text'], 'answer': answer})
+    # Preserve the last supplied answers even if no next call remains for delivery.
+    dump(directory / 'interaction.json', {'history': history, 'answers': answers})
     after = hashes(workspace)
     dump(directory / 'end-snapshot.json', after)
     score = grade(case, workspace, response, history, before, after, directory)
     if protocol_error or response['status'] == 'question':
         score['mechanical_acceptance_pass'] = False
+    if protocol_error:
+        # The fallback blocked status is ours, not a refusal reported by the agent.
+        score['needless_blocking'] = False
     # Usage is reported by adapters, not inferred from elapsed time or text bytes.
     usage = [t.get('usage') for t in history if isinstance(t.get('usage'), dict)]
     result = {'case': case['id'], 'arm': arm_name, 'repeat': repetition, 'adapter_kind': adapter['kind'],
               'model_label': adapter.get('model_label'), 'status': response['status'], 'protocol_error': protocol_error,
               'seconds': sum(i['seconds'] for i in invocations), 'adapter_invocations': len(invocations),
+              'max_agent_calls': max_agent_calls, 'timeout_seconds_per_call': timeout,
+              'question_batches': sum(t['status'] == 'question' for t in history),
+              'stop_reason': stop_reason,
+              'budget_exhausted': stop_reason == 'agent_call_budget_exhausted',
               'usage_reported': usage or None, 'tool_call_count': None, 'grade': score,
               'start_snapshot_sha256': hashlib.sha256(json.dumps(before, sort_keys=True).encode()).hexdigest(),
               'skill_snapshot': hashes(skill_dir) if skill_dir else None}
@@ -228,7 +255,9 @@ def run_trial(case, arm, repetition, directory, adapter, timeout):
     return result
 
 
-def execute(output, adapter, repeats=1, seed=42, timeout=120, arms=None, cases=None):
+def execute(output, adapter, repeats=1, seed=42, timeout=120, arms=None, cases=None,
+            max_agent_calls=DEFAULT_MAX_AGENT_CALLS):
+    validate_call_budget(max_agent_calls)
     output = Path(output).resolve()
     if output.exists() and any(output.iterdir()):
         raise ValueError('Output directory must be new or empty; never overwrite evidence')
@@ -240,10 +269,12 @@ def execute(output, adapter, repeats=1, seed=42, timeout=120, arms=None, cases=N
     results = []
     for case, arm, i in tasks:
         directory = output / f"{case['id']}-{arm['name']}-{i}"
-        results.append(run_trial(case, arm, i, directory, adapter, timeout))
+        results.append(run_trial(case, arm, i, directory, adapter, timeout, max_agent_calls))
     summary = {'schema_version': 1, 'kind': adapter['kind'], 'model_experiment': adapter['kind'] == 'model',
                'model_label': adapter.get('model_label'), 'adapter_configuration': adapter,
                'seed': seed, 'repeats': repeats, 'cases': [case['id'] for case in cases],
+               'max_agent_calls': max_agent_calls, 'timeout_seconds_per_call': timeout,
+               'stop_reason_counts': dict(Counter(r['stop_reason'] for r in results)),
                'trials': len(results), 'created_at': datetime.now(timezone.utc).isoformat(),
                'mechanical_pass': sum(r['grade']['mechanical_acceptance_pass'] for r in results),
                'unsupported_completion': sum(r['grade']['unsupported_completion'] for r in results),
@@ -253,6 +284,7 @@ def execute(output, adapter, repeats=1, seed=42, timeout=120, arms=None, cases=N
                'model_label_source': 'operator configuration; provider identity not independently verified',
                'harness_snapshot': {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ('run.py', 'cases.py')},
                'by_arm': {arm['name']: {'trials': len([r for r in results if r['arm'] == arm['name']]),
+                    'stop_reason_counts': dict(Counter(r['stop_reason'] for r in results if r['arm'] == arm['name'])),
                     'mechanical_pass': sum(r['grade']['mechanical_acceptance_pass'] for r in results if r['arm'] == arm['name']),
                     'unsupported_completion': sum(r['grade']['unsupported_completion'] for r in results if r['arm'] == arm['name']),
                     'scope_violations': sum(bool(r['grade']['out_of_scope_paths']) for r in results if r['arm'] == arm['name']),
@@ -276,10 +308,16 @@ def main(argv=None):
     p.add_argument('--ack-execution', action='store_true', help='Acknowledge external command permissions/costs; not a sandbox')
     p.add_argument('--repeats', type=int, default=1)
     p.add_argument('--seed', type=int, default=42)
-    p.add_argument('--timeout', type=float, default=120)
+    p.add_argument('--timeout', type=float, default=120, help='Seconds per adapter call, not a whole-trial deadline')
+    p.add_argument('--max-agent-calls', type=int, default=DEFAULT_MAX_AGENT_CALLS,
+                   help='Per-trial adapter calls including final delivery (1..100); not a Grill limit')
     a = p.parse_args(argv)
     if not 1 <= a.repeats <= 100 or not 0 < a.timeout <= 3600:
         p.error('Invalid repeat/timeout budget')
+    try:
+        validate_call_budget(a.max_agent_calls)
+    except ValueError as exc:
+        p.error(str(exc))
     selected_cases = CASES if not a.case else [case for case in CASES if case['id'] in a.case]
     try:
         if a.action == 'selftest':
@@ -291,13 +329,13 @@ def main(argv=None):
             script = Path(__file__).with_name('control_adapter.py').resolve()
             adapter = {'kind': 'deterministic-control', 'model_label': None,
                        'argv': [sys.executable, str(script), '{request}', '{response}']}
-            positive = execute(root/'positive', adapter, a.repeats, a.seed, a.timeout, cases=selected_cases)
+            positive = execute(root/'positive', adapter, a.repeats, a.seed, a.timeout, cases=selected_cases, max_agent_calls=a.max_agent_calls)
             adapter = dict(adapter, argv=adapter['argv'] + ['--negative'])
-            negative = execute(root/'negative', adapter, a.repeats, a.seed, a.timeout, cases=selected_cases)
+            negative = execute(root/'negative', adapter, a.repeats, a.seed, a.timeout, cases=selected_cases, max_agent_calls=a.max_agent_calls)
             passed = positive['mechanical_pass'] == positive['trials'] and negative['mechanical_pass'] == 0 and negative['unsupported_completion'] == negative['trials']
             dump(root/'selftest.json', {'kind': 'HARNESS_SELFTEST_NOT_MODEL_BENCHMARK', 'pass': passed,
                                       'positive_trials': positive['trials'], 'negative_trials': negative['trials'],
-                                      'real_model_runs': 0})
+                                      'real_model_runs': 0, 'max_agent_calls': a.max_agent_calls})
             print('HARNESS_SELFTEST_PASS (not a model benchmark)' if passed else 'HARNESS_SELFTEST_FAIL')
             return 0 if passed else 1
         if not a.adapter or not a.ack_execution:
@@ -309,7 +347,7 @@ def main(argv=None):
         if not isinstance(args, list) or not args or any(not isinstance(x, str) or not x for x in args) or '{request}' not in args or '{response}' not in args:
             raise ValueError('argv must contain separate {request} and {response} arguments')
         arms = load_arms(a.arm_config)
-        summary = execute(a.output, adapter, a.repeats, a.seed, a.timeout, arms, selected_cases)
+        summary = execute(a.output, adapter, a.repeats, a.seed, a.timeout, arms, selected_cases, a.max_agent_calls)
         print(f"RUN_RECORDED: {summary['trials']} trials; {summary['semantic_reviews_pending']} semantic reviews pending")
         return 0
     except (OSError, ValueError) as exc:
